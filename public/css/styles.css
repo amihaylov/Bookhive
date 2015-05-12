@@ -32,33 +32,33 @@ header {
 /* theme */
 
 body {
-  color:#828282;
-  background-color:#eee;
+  color:#116611;
+  background-image: url("http://images2.alphacoders.com/261/26102.jpg");
 }
 
 a,a:hover {
-	color:#22cc22;
+	color:#009900;
   	text-decoration:none;
 }
 
 .highlight-bk {
-	background-color:#22cc22;
+	background-color:#009900;
     padding:1px;
     width:100%;
 }
 
 .highlight {
-	color:#22cc22;
+	color:#009900;
 }
   
 h3.highlight  {
 	padding-top:13px;
     padding-bottom:14px;
-  	border-bottom:2px solid #22cc22;
+  	border-bottom:2px solid #009900;
 }
 
 .navbar {
-	background-color:#22cc22;
+	background-color:#009900;
   	color:#ffffff;
     border:0;
   	border-radius:0;
@@ -83,7 +83,7 @@ h3.highlight  {
 	color: #f0f0f0;
 	background-color:transparent;
   	opacity:.9;
-    border-color:#22cc22;
+    border-color:#009900;
 }
 
 .nav .open > a {
@@ -103,6 +103,10 @@ h3.highlight  {
 	padding-left:1px;
 }
 
+.accordion-inner {
+  color: #fff;
+}
+
 .caret {
 	color:#fff;
 }
@@ -119,10 +123,21 @@ h3.highlight  {
 .panel {
 	padding-left:27px;
     padding-right:27px;
+    background-color: #88CC88;
 }
 
 .item {
   padding-top: 10px;
   padding-bottom: 10px;
+}
+
+.img {
+  max-width: 170px;
+  height: auto;
+}
+
+.second-header {
+  margin:auto;
+  text-align: center;
 }
 /* end theme */
