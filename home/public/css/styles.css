@@ -121,4 +121,8 @@ h3.highlight  {
     padding-right:27px;
 }
 
+.item {
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
 /* end theme */
