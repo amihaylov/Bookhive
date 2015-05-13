@@ -2,39 +2,51 @@
 // on document ready
 $( document ).ready(function(){
    // init stuff here
-	StudentsApp.displayList();
+	BooksApp.displayList();
 
-   // bind add task to StudentsApp.addStudent
+   // bind add task to BooksApp.addBook
    $("button#create-button").click(function(){
-   	//FIX student variable, should be object,
-   	//that takes the values of all three fields!
-   	var student = {id: $("input#student-id").val(),
-   				   name: $("input#student-name").val(),
-   				   email: $("input#student-email").val() };		   
-   	StudentsApp.addStudent(student);
-      StudentsApp.displayList();
+   	var book = {title: $("input#book-title").val(),
+   				   author: $("input#book-author").val(),
+   				   imgSrc: $("input#book-imgsrc").val(),
+                  review: $("input#book-review").val(),
+                  price: $("input#book-price").val(),
+                  dateOfPub: $("input#book-dateofpub").val(),
+                  rating: $("input#book-rating").val(),
+                  numOfSales: $("input#book-numofsales").val(),
+                  promotion: $("input#book-promotion").val() };		   
+   	BooksApp.addBook(book);
+      BooksApp.displayList();
    });
 
-   // bind update task to StudentsApp.updateStudent
+   // bind update task to BooksApp.updateBook
    $("button#update-button").click(function(){
-      //FIX student variable, should be object,
-      //that takes the values of all three fields!
-      var student = {id: $("input#student-id").val(),
-                  name: $("input#student-name").val(),
-                  email: $("input#student-email").val() };        
-      StudentsApp.updateStudent(student);
-      StudentsApp.displayList();
+      var book = {title: $("input#book-title").val(),
+                  author: $("input#book-author").val(),
+                  imgSrc: $("input#book-imgsrc").val(),
+                  review: $("input#book-review").val(),
+                  price: $("input#book-price").val(),
+                  dateOfPub: $("input#book-dateofpub").val(),
+                  rating: $("input#book-rating").val(),
+                  numOfSales: $("input#book-numofsales").val(),
+                  promotion: $("input#book-promotion").val() };       
+      BooksApp.updateBook(book);
+      BooksApp.displayList();
    });
 
-   // bind delete task to StudentsApp.deleteStudent
+   // bind delete task to BooksApp.deleteBook
    $("button#delete-button").click(function(){
-      //FIX student variable, should be object,
-      //that takes the values of all three fields!
-      var student = {id: $("input#student-id").val(),
-                  name: $("input#student-name").val(),
-                  email: $("input#student-email").val() };        
-      StudentsApp.deleteStudent(student);
-      StudentsApp.displayList();
+      var book = {title: $("input#book-title").val(),
+                  author: $("input#book-author").val(),
+                  imgSrc: $("input#book-imgsrc").val(),
+                  review: $("input#book-review").val(),
+                  price: $("input#book-price").val(),
+                  dateOfPub: $("input#book-dateofpub").val(),
+                  rating: $("input#book-rating").val(),
+                  numOfSales: $("input#book-numofsales").val(),
+                  promotion: $("input#book-promotion").val() };        
+      BooksApp.deleteBook(book);
+      BooksApp.displayList();
    });
 })
 

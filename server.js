@@ -17,100 +17,111 @@ app.use(bodyParser.json());
 app.use(methodOverride());
 
 // this will serve as our resource on the server
-var students =[
-	{id: 'john-doe', name: 'John Doe', email: 'john@doe.com'},
-	{id: 'jane-doe', name: 'Jane Doe', email: 'jane@doe.com'}
+var books =[
+	{imgSrc: 'john-doe', title: 'John Doe', author: 'john@doe.com', review: 'john@doe.com', price: 'john@doe.com'
+	, dateOfPub: 'john@doe.com', rating: 'john@doe.com', numOfSales: 'john@doe.com', promotions: 'john@doe.com' }
 ];
 
 //TODO make it with student - id, name, email, classes
 
 // collection endpoints
-// get all students
-app.get('/students', function(req, res){
-	res.jsonp(students);
+// get all books
+app.get('/books', function(req, res){
+	res.jsonp(books);
 });
 
 // post new user to the collection
-app.post('/students', function(req, res){
+app.post('/books', function(req, res){
  // req.body contains the incoming fields and values
-	var id = req.body.id;
-	var name = req.body.name;
-	var email = req.body.email;
-	students.push({
-		id: id,
-		name: name,
-		email: email
-	});
+	var imgSrc = req.body.imgSrc;
+	var title = req.body.title;
+	var author = req.body.author;
+	var review = req.body.review;
+	var price = req.body.price;
+	var dateOfPub = req.body.dateOfPub;
+	var rating = req.body.rating;
+	var numOfSales = req.body.numOfSales;
+	var promotions = req.body.promotions;
+
+	var book = {imgSrc: imgSrc, title: title, author: author, review: review, price: price,
+		 dateOfPub: dateOfPub, rating: rating, numOfSales: numOfSales, promotions: promotions };
+
+	books.push(book);
 
 	res.jsonp({
-	msg: 'student created',
-	data: students[students.length-1]
+	msg: 'book created',
+	data: books[books.length-1]
 	});
 });
 
 
 // document endpoints
-// get info about user by id
-// for eg: /students/john-doe
-app.get('/students/:id', function(req, res){
- // get the id from the params
+// get info about book by title
+// for eg: /books/john-doe
+app.get('/books/:title', function(req, res){
+ // get the title from the params
 	/* If we dont use arrays
-	var id = req.params.id;
-	res.jsonp(students[id]);
+	var title = req.params.title;
+	res.jsonp(books[title]);
 	*/
-	var id = req.params.id;
-	for (var i=0; i<students.length; i+=1) {
-		if (students[i].id == id) {
-			return res.jsonp(students[i]);
+	var title = req.params.title;
+	for (var i=0; i<books.length; i+=1) {
+		if (books[i].title == title) {
+			return res.jsonp(books[i]);
 		}
 	}
-	res.status(500).send('No such student id!');
+	res.status(500).send('No such book title!');
 });
 
-// put an updated version of a user by id
-app.put('/students/:id', function(req, res){
- // get the id from the params
-	var id = req.params.id;
+// put an updated version of a book by title
+app.put('/books/:title', function(req, res){
+ // get the title from the params
+	var title = req.params.title;
 	var counter=0;
  // update the info from the body if passed or use the existing one
 	/* If not using array	
-	students[id].name = req.body.name || students[id].name;
-	students[id].email = req.body.email || students[id].email;
+	books[title].author = req.body.author;
 	*/
-	for (var i=0; i<students.length; i+=1) {
-		if (students[i].id == id) {
-			students[i].name = req.body.name;
-			students[i].email = req.body.email;
+	for (var i=0; i<books.length; i+=1) {
+		if (books[i].title == title) {
+			books[i].imgSrc = req.body.imgSrc;
+			books[i].author = req.body.author;
+			books[i].review = req.body.review;
+			books[i].price = req.body.price;
+			books[i].dateOfPub = req.body.dateOfPub;
+			books[i].rating = req.body.rating;
+			books[i].numOfSales = req.body.numOfSales;
+			books[i].promotions = req.body.promotions;
 			counter=i;
 		}
 	}
 
 	res.jsonp({
-		msg: 'user data updated',
-		data: students[counter]
+		msg: 'Book data updated',
+		data: books[counter]
 	});
 });
 
-// delete an existing user by id
-app.delete('/students/:id', function(req, res){
-	var id = req.params.id;
+// delete an existing book by title
+app.delete('/books/:title', function(req, res){
+	var title = req.params.title;
 	var status = 'failed';
-/*	if(students[id]){
-		delete(students[id])
-		res.jsonp('user '+id+' successfully deleted!');
+/*	if(books[title]){
+		delete(books[title])
+		res.jsonp(title + ' successfully deleted!');
 	} else {
-		res.jsonp('user '+id+' does not exist!');
+		res.jsonp(title + ' does not exist!');
 	}*/
-	for (var i=0; i<students.length; i+=1) {
-		if (students[i].id == id) {
-			students.splice(i, 1);
+	for (var i=0; i<books.length; i+=1) {
+		if (books[i].title == title) {
+			books.splice(i, 1);
 			status = i;
 		}
 	}
 	if (status !== 'failed')
-		res.jsonp('user '+id+' successfully deleted!');
+		res.jsonp(title + ' successfully deleted!');
 	else
-		res.jsonp('user '+id+' does not exist!');
+		res.jsonp(title + ' does not exist!');
 });
 
 // listen for requests

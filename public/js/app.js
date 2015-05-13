@@ -1,47 +1,54 @@
-var StudentsApp = (function() {
+var BooksApp = (function() {
 
-  var addStudent = function(student) {
-    //var test = {id: "kiro2", name: "Kiro Ananasov", email: "kiro@test.com"};
-    $.ajax({
+  var addBook = function(book) {
       type: "POST",
-      url: '/students',
-      data: student
+      url: '/books',
+      data: book
     });
   };
 
   //TODO Make selector for id
-  var updateStudent = function(student) {
+  var updateBook = function(book) {
     $.ajax({
       type: "PUT",
-      url: '/students/' + student.id,
-      data: student
+      url: '/books/' + book.title,
+      data: book
     });
   };
 
   //TODO Make selector for id
-  var deleteStudent = function(student) {
+  var deleteBook = function(book) {
     $.ajax({
       type: "DELETE",
-      url: '/students/' + student.id,
-      data: student
+      url: '/books/' + book.title,
+      data: book
     });
   };
 
   var displayList = function() {
 
-    $.get( "/students", function( data ) {
-      $( ".result" ).html( data );
-      var container = $("#students-database > tbody");
+    $.get( "/books", function( data ) {
+      //$( ".result" ).html( data );
+      var container = $("#books-database > tbody");
       container.empty();
 
       //Add the database
       for (var i=0; i<data.length; i+=1){
         //Add classes TODO!
         var row = $("<tr></tr>");
-        var cellId = $("<td></td>").text(data[i].id);
-        var cellName = $("<td></td>").text(data[i].name);
-        var cellEmail = $("<td></td>").text(data[i].email);
-        row.append(cellId).append(cellName).append(cellEmail);
+        var cellTitle = $("<td></td>").text(data[i].title);
+        var cellAuthor = $("<td></td>").text(data[i].author);
+        var cellImageSource = $("<td></td>").text(data[i].imgSrc);
+        var cellReview = $("<td></td>").text(data[i].review);
+        var cellPrice = $("<td></td>").text(data[i].price);
+        var cellDateOfPub = $("<td></td>").text(data[i].dateOfPub);
+        var cellRating = $("<td></td>").text(data[i].rating);
+        var cellNumOfSales = $("<td></td>").text(data[i].numOfSales);
+        var cellPromotions = $("<td></td>").text(data[i].promotions);
+
+        row.append(cellTitle).append(cellAuthor).append(cellImageSource).append(cellReview)
+            .append(cellPrice).append(cellDateOfPub).append(cellRating).append(cellNumOfSales)
+            .append(cellPromotions);
         container.append(row);
       }
 
@@ -51,9 +58,9 @@ var StudentsApp = (function() {
 
   // public api
   return {
-    addStudent: addStudent,
-    updateStudent: updateStudent,
-    deleteStudent: deleteStudent,
+    addBook: addBook,
+    updateBook: updateBook,
+    deleteBook: deleteBook,
     displayList: displayList
   };
 })();
