@@ -1,6 +1,7 @@
 var BooksApp = (function() {
 
   var addBook = function(book) {
+    $.ajax({
       type: "POST",
       url: '/books',
       data: book
