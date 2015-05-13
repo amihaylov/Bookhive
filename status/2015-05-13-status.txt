@@ -1,0 +1,4 @@
+fixed the frontend JS bug.
+There is a bug, not showing promotions in admin panel.
+
+TODO: Link the actual page with the resources.
