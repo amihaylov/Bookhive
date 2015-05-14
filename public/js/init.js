@@ -3,7 +3,7 @@
 $( document ).ready(function(){
    // init stuff here
 	BooksApp.displayList();
-
+   
    // bind add task to BooksApp.addBook
    $("button#create-button").click(function(){
    	var book = {title: $("input#book-title").val(),
@@ -14,7 +14,7 @@ $( document ).ready(function(){
                   dateOfPub: $("input#book-dateofpub").val(),
                   rating: $("input#book-rating").val(),
                   numOfSales: $("input#book-numofsales").val(),
-                  promotion: $("input#book-promotion").val() };		   
+                  promotions: $("input#book-promotions").val() };		   
    	BooksApp.addBook(book);
       BooksApp.displayList();
    });
@@ -29,7 +29,7 @@ $( document ).ready(function(){
                   dateOfPub: $("input#book-dateofpub").val(),
                   rating: $("input#book-rating").val(),
                   numOfSales: $("input#book-numofsales").val(),
-                  promotion: $("input#book-promotion").val() };       
+                  promotions: $("input#book-promotions").val() };       
       BooksApp.updateBook(book);
       BooksApp.displayList();
    });
@@ -44,7 +44,7 @@ $( document ).ready(function(){
                   dateOfPub: $("input#book-dateofpub").val(),
                   rating: $("input#book-rating").val(),
                   numOfSales: $("input#book-numofsales").val(),
-                  promotion: $("input#book-promotion").val() };        
+                  promotions: $("input#book-promotions").val() };        
       BooksApp.deleteBook(book);
       BooksApp.displayList();
    });
