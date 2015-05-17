@@ -123,7 +123,7 @@ h3.highlight  {
 .panel {
 	padding-left:27px;
     padding-right:27px;
-    background-color: #88CC88;
+    background-color: rgba(136, 204, 136, 0.8);
 }
 
 .item {

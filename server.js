@@ -64,12 +64,17 @@ app.get('/books/:title', function(req, res){
 	var title = req.params.title;
 	res.jsonp(books[title]);
 	*/
+	var success = false;
+	var result = [];
 	var title = req.params.title;
 	for (var i=0; i<books.length; i+=1) {
-		if (books[i].title == title) {
-			return res.jsonp(books[i]);
+		if (books[i].title.indexOf(title) > -1) {
+			result.push(books[i]);
+			success = true;
 		}
 	}
+	if (success === true)
+		return res.jsonp(result);
 	res.status(500).send('No such book title!');
 });
 
@@ -112,7 +117,7 @@ app.delete('/books/:title', function(req, res){
 	} else {
 		res.jsonp(title + ' does not exist!');
 	}*/
-	for (var i=0; i<books.length; i+=1) {
+	for (var i=0https://www.youtube.com/watch?v=jFnqQbtHeDE; i<books.length; i+=1) {
 		if (books[i].title == title) {
 			books.splice(i, 1);
 			status = i;

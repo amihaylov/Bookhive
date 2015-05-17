@@ -82,13 +82,43 @@ var BooksApp = (function() {
     
   };
 
+  var searchByTitleAndDisplay = function(title) {
+
+    $.get( "/books/" + title, function( data ) {
+      //$( ".result" ).html( data );
+      if(typeof(data)!=='undefined'){
+        var container = $("#inner-content");
+        container.empty();
+        //Add the database
+        for (var i=0; i<data.length; i+=1){
+          //Add classes TODO!
+          var row = $("<div></div>").addClass("row item");
+          var cellImage = $("<div></div>").addClass("col-md-3 items").prepend($('<img>',{class: 'img', src: data[i].imgSrc}));
+          var cellReview = $("<div></div>").addClass("col-md-3 items").text(data[i].review);
+          var cellPrice = $("<div></div>").addClass("col-md-3 items");
+          var shoppingCart = $("<i></i>").addClass("fa fa-shopping-cart").text(data[i].price);
+          cellPrice.append(shoppingCart);
+
+          row.append(cellImage).append(cellReview).append(cellPrice);
+          container.append(row);
+        }
+      }
+      else
+        alert("No such book!");
+
+    },"json");
+    
+  };
+
+
   // public api
   return {
     addBook: addBook,
     updateBook: updateBook,
     deleteBook: deleteBook,
     displayList: displayList,
-    displayImgReviewPrice: displayImgReviewPrice
+    displayImgReviewPrice: displayImgReviewPrice,
+    searchByTitleAndDisplay: searchByTitleAndDisplay
   };
 })();
  
