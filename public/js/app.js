@@ -57,27 +57,28 @@ var BooksApp = (function() {
     
   };
 
+  var display = function(data) {
+    var container = $("#inner-content");
+    container.empty();
+
+    //Add the database
+    for (var i=0; i<data.length; i+=1){
+      //Add classes TODO!
+      var row = $("<div></div>").addClass("row item");
+      var cellImage = $("<div></div>").addClass("col-md-3 items").prepend($('<img>',{class: 'img', src: data[i].imgSrc}));
+      var cellReview = $("<div></div>").addClass("col-md-3 items").text(data[i].review);
+      var cellPrice = $("<div></div>").addClass("col-md-3 items");
+      var shoppingCart = $("<i></i>").addClass("fa fa-shopping-cart").text(data[i].price);
+      cellPrice.append(shoppingCart);
+
+      row.append(cellImage).append(cellReview).append(cellPrice);
+      container.append(row);
+    }
+  };
+
   var displayImgReviewPrice = function() {
-
     $.get( "/books", function( data ) {
-      //$( ".result" ).html( data );
-      var container = $("#inner-content");
-      container.empty();
-
-      //Add the database
-      for (var i=0; i<data.length; i+=1){
-        //Add classes TODO!
-        var row = $("<div></div>").addClass("row item");
-        var cellImage = $("<div></div>").addClass("col-md-3 items").prepend($('<img>',{class: 'img', src: data[i].imgSrc}));
-        var cellReview = $("<div></div>").addClass("col-md-3 items").text(data[i].review);
-        var cellPrice = $("<div></div>").addClass("col-md-3 items");
-        var shoppingCart = $("<i></i>").addClass("fa fa-shopping-cart").text(data[i].price);
-        cellPrice.append(shoppingCart);
-
-        row.append(cellImage).append(cellReview).append(cellPrice);
-        container.append(row);
-      }
-
+      display(data);
     },"json");
     
   };
@@ -85,26 +86,37 @@ var BooksApp = (function() {
   var searchByTitleAndDisplay = function(title) {
 
     $.get( "/books/" + title, function( data ) {
-      //$( ".result" ).html( data );
       if(typeof(data)!=='undefined'){
-        var container = $("#inner-content");
-        container.empty();
-        //Add the database
-        for (var i=0; i<data.length; i+=1){
-          //Add classes TODO!
-          var row = $("<div></div>").addClass("row item");
-          var cellImage = $("<div></div>").addClass("col-md-3 items").prepend($('<img>',{class: 'img', src: data[i].imgSrc}));
-          var cellReview = $("<div></div>").addClass("col-md-3 items").text(data[i].review);
-          var cellPrice = $("<div></div>").addClass("col-md-3 items");
-          var shoppingCart = $("<i></i>").addClass("fa fa-shopping-cart").text(data[i].price);
-          cellPrice.append(shoppingCart);
-
-          row.append(cellImage).append(cellReview).append(cellPrice);
-          container.append(row);
-        }
+        display(data);
       }
       else
         alert("No such book!");
+
+    },"json");
+    
+  };
+
+  var searchByAuthorAndDisplay = function(author) {
+
+    $.get( "/authors/" + author, function( data ) {
+      if(typeof(data)!=='undefined'){
+        display(data);
+      }
+      else
+        alert("No such author!");
+
+    },"json");
+    
+  };
+
+  var searchByDateAndDisplay = function(date) {
+
+    $.get( "/dates/" + date, function( data ) {
+      if(typeof(data)!=='undefined'){
+        display(data);
+      }
+      else
+        alert("No such book published on that date! Mind the YYYY-MM format!");
 
     },"json");
     
@@ -118,7 +130,9 @@ var BooksApp = (function() {
     deleteBook: deleteBook,
     displayList: displayList,
     displayImgReviewPrice: displayImgReviewPrice,
-    searchByTitleAndDisplay: searchByTitleAndDisplay
+    searchByTitleAndDisplay: searchByTitleAndDisplay,
+    searchByAuthorAndDisplay: searchByAuthorAndDisplay,
+    searchByDateAndDisplay: searchByDateAndDisplay
   };
 })();
  

@@ -78,6 +78,56 @@ app.get('/books/:title', function(req, res){
 	res.status(500).send('No such book title!');
 });
 
+//Lesson learned! '/authors/:author' DO matter!
+// '/authors/' create a different search namespace so to say
+// while ':author' searches for a field/key in the data and
+// therefore should be a valid one
+
+// document endpoints
+// get info about book by author
+// for eg: /books/stephen%20king
+app.get('/authors/:author', function(req, res){
+ // get the title from the params
+	/* If we dont use arrays
+	var author = req.params.author;
+	res.jsonp(books[author]);
+	*/
+	var success = false;
+	var result = [];
+	var author = req.params.author;
+	for (var i=0; i<books.length; i+=1) {
+		if (books[i].author.indexOf(author) > -1) {
+			result.push(books[i]);
+			success = true;
+		}
+	}
+	if (success === true)
+		return res.jsonp(result);
+	res.status(500).send('No such book author!');
+});
+
+// get info about book by date of publishing
+// for eg: /dates/2015-01
+app.get('/dates/:dateOfPub', function(req, res){
+ // get the title from the params
+	/* If we dont use arrays
+	var dateOfPub = req.params.dateOfPub;
+	res.jsonp(books[dateOfPub]);
+	*/
+	var success = false;
+	var result = [];
+	var dateOfPub = req.params.dateOfPub;
+	for (var i=0; i<books.length; i+=1) {
+		if (books[i].dateOfPub.indexOf(dateOfPub) > -1) {
+			result.push(books[i]);
+			success = true;
+		}
+	}
+	if (success === true)
+		return res.jsonp(result);
+	res.status(500).send('No such book published at the given date! Mind the YYYY-MM format!');
+});
+
 // put an updated version of a book by title
 app.put('/books/:title', function(req, res){
  // get the title from the params
@@ -117,7 +167,7 @@ app.delete('/books/:title', function(req, res){
 	} else {
 		res.jsonp(title + ' does not exist!');
 	}*/
-	for (var i=0https://www.youtube.com/watch?v=jFnqQbtHeDE; i<books.length; i+=1) {
+	for (var i=0; i<books.length; i+=1) {
 		if (books[i].title == title) {
 			books.splice(i, 1);
 			status = i;
