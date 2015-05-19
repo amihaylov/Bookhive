@@ -83,6 +83,66 @@ var BooksApp = (function() {
     
   };
 
+  var searchForPromoAndDisplay = function(){
+    $.get( "/books", function( data ) {
+      var container = $("#inner-content");
+      container.empty();
+
+      //Add the database
+      for (var i=0; i<data.length; i+=1){
+        //Add classes TODO!
+        if(typeof(data[i].promotions) !== 'undefined' || data[i].promotions.length()>0) {
+          var row = $("<div></div>").addClass("row item");
+          var cellImage = $("<div></div>").addClass("col-md-3 items").prepend($('<img>',{class: 'img', src: data[i].imgSrc}));
+          var cellReview = $("<div></div>").addClass("col-md-3 items").text(data[i].review);
+          var cellPromo = $("<div></div>").addClass("col-md-3 items").text(data[i].promotions);
+          var cellPrice = $("<div></div>").addClass("col-md-3 items");
+          var shoppingCart = $("<i></i>").addClass("fa fa-shopping-cart").text(data[i].price);
+          cellPrice.append(shoppingCart);
+
+          row.append(cellImage).append(cellReview).append(cellPromo).append(cellPrice);
+          container.append(row);
+        }
+      }
+    },"json");
+  };
+
+  //NOT WORKING YET!
+  var displayMostSelled = function(){
+    $.get( "/books", function( data ) {
+      var container = $("#inner-content");
+      container.empty();
+      
+      var mostSelled = [];
+      var excluded = [];
+
+      //MAKE IT WORK! Idea is to sort data by numofsales and take top 5.
+      for(var numIterations=0; numIterations<5; numIterations+=1){
+        var max = 0;
+        for (var i=0; i<data.length; i+=1){
+          for (var j=0; j<excluded.length(); j+=1){
+            if (i !== excluded[j])
+              break;
+          }
+        }
+      }
+      //Add the database
+      for (var i=0; i<mostSelled.length; i+=1){
+        //Add classes TODO!
+          var row = $("<div></div>").addClass("row item");
+          var cellImage = $("<div></div>").addClass("col-md-3 items").prepend($('<img>',{class: 'img', src: data[i].imgSrc}));
+          var cellReview = $("<div></div>").addClass("col-md-3 items").text(data[i].review);
+          var cellPromo = $("<div></div>").addClass("col-md-3 items").text(data[i].promotions);
+          var cellPrice = $("<div></div>").addClass("col-md-3 items");
+          var shoppingCart = $("<i></i>").addClass("fa fa-shopping-cart").text(data[i].price);
+          cellPrice.append(shoppingCart);
+
+          row.append(cellImage).append(cellReview).append(cellPromo).append(cellPrice);
+          container.append(row);
+      }
+    },"json");
+  };
+
   var searchByTitleAndDisplay = function(title) {
 
     $.get( "/books/" + title, function( data ) {
@@ -132,7 +192,8 @@ var BooksApp = (function() {
     displayImgReviewPrice: displayImgReviewPrice,
     searchByTitleAndDisplay: searchByTitleAndDisplay,
     searchByAuthorAndDisplay: searchByAuthorAndDisplay,
-    searchByDateAndDisplay: searchByDateAndDisplay
+    searchByDateAndDisplay: searchByDateAndDisplay,
+    searchForPromoAndDisplay: searchForPromoAndDisplay
   };
 })();
  
