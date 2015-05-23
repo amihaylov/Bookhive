@@ -107,27 +107,23 @@ var BooksApp = (function() {
     },"json");
   };
 
-  //NOT WORKING YET!
+  //Sorting the whole data descending and returning top 5 selled items
   var displayMostSelled = function(){
     $.get( "/books", function( data ) {
       var container = $("#inner-content");
       container.empty();
       
-      var mostSelled = [];
-      var excluded = [];
+      data.sort(function(a, b){
+        var keyA = a.numOfSales,
+        keyB = b.numOfSales;
+        // Compare the 2 number of sales
+        if(keyA > keyB) return -1;
+        if(keyA < keyB) return 1;
+        return 0;
+      });
 
-      //MAKE IT WORK! Idea is to sort data by numofsales and take top 5.
-      for(var numIterations=0; numIterations<5; numIterations+=1){
-        var max = 0;
-        for (var i=0; i<data.length; i+=1){
-          for (var j=0; j<excluded.length(); j+=1){
-            if (i !== excluded[j])
-              break;
-          }
-        }
-      }
       //Add the database
-      for (var i=0; i<mostSelled.length; i+=1){
+      for (var i=0; i<5; i+=1){
         //Add classes TODO!
           var row = $("<div></div>").addClass("row item");
           var cellImage = $("<div></div>").addClass("col-md-3 items").prepend($('<img>',{class: 'img', src: data[i].imgSrc}));
@@ -135,9 +131,11 @@ var BooksApp = (function() {
           var cellPromo = $("<div></div>").addClass("col-md-3 items").text(data[i].promotions);
           var cellPrice = $("<div></div>").addClass("col-md-3 items");
           var shoppingCart = $("<i></i>").addClass("fa fa-shopping-cart").text(data[i].price);
+          var cellNumOfSales = $("<i></i>").addClass("col-md-3 items").text(data[i].numOfSales);
           cellPrice.append(shoppingCart);
 
-          row.append(cellImage).append(cellReview).append(cellPromo).append(cellPrice);
+          row.append(cellImage).append(cellReview).append(cellPromo)
+              .append(cellPrice).append(cellNumOfSales);
           container.append(row);
       }
     },"json");
@@ -193,7 +191,8 @@ var BooksApp = (function() {
     searchByTitleAndDisplay: searchByTitleAndDisplay,
     searchByAuthorAndDisplay: searchByAuthorAndDisplay,
     searchByDateAndDisplay: searchByDateAndDisplay,
-    searchForPromoAndDisplay: searchForPromoAndDisplay
+    searchForPromoAndDisplay: searchForPromoAndDisplay,
+    displayMostSelled: displayMostSelled
   };
 })();
  

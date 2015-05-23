@@ -6,4 +6,7 @@ $( document ).ready(function(){
    $("#promo").click(function() {
 		BooksApp.searchForPromoAndDisplay();
 	});
+   $("#most-selled").click(function() {
+		BooksApp.displayMostSelled();
+	});
 })

@@ -34,6 +34,7 @@ header {
 body {
   color:#116611;
   background-image: url("http://images2.alphacoders.com/261/26102.jpg");
+  background-attachment:fixed;
 }
 
 a,a:hover {
@@ -134,6 +135,7 @@ h3.highlight  {
 .img {
   max-width: 170px;
   height: auto;
+  box-shadow: 0px 0px 20px #fff;
 }
 
 .second-header {
