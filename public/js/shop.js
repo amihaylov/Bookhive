@@ -9,4 +9,7 @@ $( document ).ready(function(){
    $("#most-selled").click(function() {
 		BooksApp.displayMostSelled();
 	});
+   $("#top-rated").click(function() {
+		BooksApp.displayTopRated();
+	});
 })

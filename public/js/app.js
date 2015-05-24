@@ -141,6 +141,39 @@ var BooksApp = (function() {
     },"json");
   };
 
+  var displayTopRated = function(){
+  $.get( "/books", function( data ) {
+    var container = $("#inner-content");
+    container.empty();
+    
+    data.sort(function(a, b){
+      var keyA = a.rating,
+      keyB = b.rating;
+      // Compare the 2 number of sales
+      if(keyA > keyB) return -1;
+      if(keyA < keyB) return 1;
+      return 0;
+    });
+
+    //Add the database
+    for (var i=0; i<5; i+=1){
+      //Add classes TODO!
+        var row = $("<div></div>").addClass("row item");
+        var cellImage = $("<div></div>").addClass("col-md-3 items").prepend($('<img>',{class: 'img', src: data[i].imgSrc}));
+        var cellReview = $("<div></div>").addClass("col-md-3 items").text(data[i].review);
+        var cellPromo = $("<div></div>").addClass("col-md-3 items").text(data[i].promotions);
+        var cellPrice = $("<div></div>").addClass("col-md-3 items");
+        var shoppingCart = $("<i></i>").addClass("fa fa-shopping-cart").text(data[i].price);
+        var cellRating = $("<i></i>").addClass("col-md-3 items").text(data[i].rating);
+        cellPrice.append(shoppingCart);
+
+        row.append(cellImage).append(cellReview).append(cellPromo)
+            .append(cellPrice).append(cellRating);
+        container.append(row);
+     }
+   },"json");
+  };
+
   var searchByTitleAndDisplay = function(title) {
 
     $.get( "/books/" + title, function( data ) {
@@ -192,7 +225,8 @@ var BooksApp = (function() {
     searchByAuthorAndDisplay: searchByAuthorAndDisplay,
     searchByDateAndDisplay: searchByDateAndDisplay,
     searchForPromoAndDisplay: searchForPromoAndDisplay,
-    displayMostSelled: displayMostSelled
+    displayMostSelled: displayMostSelled,
+    displayTopRated: displayTopRated
   };
 })();
  
