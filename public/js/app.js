@@ -9,19 +9,19 @@ var BooksApp = (function() {
   };
 
   //TODO Make selector for id
-  var updateBook = function(book) {
+  var updateBook = function(book, id) {
     $.ajax({
       type: "PUT",
-      url: '/books/' + book.title,
+      url: '/books/' + id,
       data: book
     });
   };
 
   //TODO Make selector for id
-  var deleteBook = function(book) {
+  var deleteBook = function(book, id) {
     $.ajax({
       type: "DELETE",
-      url: '/books/' + book.title,
+      url: '/books/' + id,
       data: book
     });
   };
@@ -46,10 +46,19 @@ var BooksApp = (function() {
         var cellRating = $("<td></td>").text(data[i].rating);
         var cellNumOfSales = $("<td></td>").text(data[i].numOfSales);
         var cellPromotions = $("<td></td>").text(data[i].promotions);
+        var cellActions = $("<td></td>");
+        var btnEdit = $("<button></button>").text('Edit')
+                .addClass("btn btn-primary edit-book")
+                .prop({"type": "button", "name": data[i].title});
+        var btnDelete = $("<button></button>").text('Del')
+                .addClass("btn btn-danger delete-book").css({"margin-left": "10px"})
+                .prop({"type": "button", "name": data[i].title});
 
-        row.append(cellTitle).append(cellAuthor).append(cellImageSource).append(cellReview)
-            .append(cellPrice).append(cellDateOfPub).append(cellRating).append(cellNumOfSales)
-            .append(cellPromotions);
+        cellActions.append(btnEdit).append(btnDelete);
+
+        row.append(cellTitle).append(cellAuthor).append(cellReview).append(cellPrice)
+            .append(cellDateOfPub).append(cellRating).append(cellNumOfSales)
+            .append(cellPromotions).append(cellImageSource).append(cellActions);
         container.append(row);
       }
 
