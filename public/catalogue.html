@@ -20,7 +20,7 @@
     <link href="css/styles.css" rel="stylesheet">
   </head>
   <body>
-<nav class="navbar navbar-static">
+<nav class="navbar navbar-static navbar-fixed-top">
     <div class="container">
       <a class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
         <span class="glyphicon glyphicon-chevron-down"></span>
@@ -85,9 +85,13 @@
         
         <div class="panel">
         <div class="panel-body second-header">
-          Search book by title: <button type="button" class="btn btn-default" id="button-search">
+          Search book by: <button type="button" class="btn btn-default" id="button-search">
           <span class="glyphicon glyphicon-search"></span> Search
           </button><input type="text" id="search-title">
+          <form>
+            <input type="radio" name="radio-search" class="radio-author" checked>Author
+            <input type="radio" name="radio-search" class="radio-title">Title
+          </form> 
         </div>
         </div>
         

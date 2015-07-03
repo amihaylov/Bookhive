@@ -19,8 +19,11 @@ app.use(methodOverride());
 // this will serve as our resource on the server
 var books =[
 	{imgSrc: 'john-doe', title: 'John Doe', author: 'john@doe.com', review: 'john@doe.com', price: 'john@doe.com'
-	, dateOfPub: 'john@doe.com', rating: 'john@doe.com', numOfSales: 'john@doe.com', promotions: 'john@doe.com' }
+	, dateOfPub: 'john@doe.com', rating: 'john@doe.com', numOfSales: 'john@doe.com', promotions: 'john@doe.com', genre: 'SciFi' }
 ];
+
+var bookstores =[{name:'Booktrading, Sofia',info:'Sofia, Patriarh Evtimii str. 30; booktrading@book.com',phone:'01234'
+				,workingTime:'Mon-Fri 08-19; Sat 10-17; Sun - closed',booksInStore:['It','1984']}];
 
 //TODO make it with student - id, name, email, classes
 
@@ -42,9 +45,11 @@ app.post('/books', function(req, res){
 	var rating = req.body.rating;
 	var numOfSales = req.body.numOfSales;
 	var promotions = req.body.promotions;
+	var genre = req.body.genre;
+
 
 	var book = {imgSrc: imgSrc, title: title, author: author, review: review, price: price,
-		 dateOfPub: dateOfPub, rating: rating, numOfSales: numOfSales, promotions: promotions };
+		 dateOfPub: dateOfPub, rating: rating, numOfSales: numOfSales, promotions: promotions, genre: genre };
 
 	books.push(book);
 
@@ -106,6 +111,28 @@ app.get('/authors/:author', function(req, res){
 	res.status(500).send('No such book author!');
 });
 
+//Multiple keys (author AND title) search
+app.get('/books/:author/:genre', function(req, res){
+ // get the title from the params
+	/* If we dont use arrays
+	var author = req.params.author;
+	res.jsonp(books[author]);
+	*/
+	var success = false;
+	var result = [];
+	var author = req.params.author;
+	var genre = req.params.genre;
+	for (var i=0; i<books.length; i+=1) {
+		if (books[i].author.indexOf(author) > -1 && books[i].genre.indexOf(genre) > -1) {
+			result.push(books[i]);
+			success = true;
+		}
+	}
+	if (success === true)
+		return res.jsonp(result);
+	res.status(500).send('No such book author and genre!');
+});
+
 // get info about book by date of publishing
 // for eg: /dates/2015-01
 app.get('/dates/:dateOfPub', function(req, res){
@@ -147,6 +174,7 @@ app.put('/books/:title', function(req, res){
 			books[i].rating = req.body.rating;
 			books[i].numOfSales = req.body.numOfSales;
 			books[i].promotions = req.body.promotions;
+			books[i].genre = req.body.genre;
 			counter=i;
 		}
 	}

@@ -13,20 +13,23 @@ header {
   	margin-bottom:5px;
 }
 
-@media (min-width: 979px) {
+/*@media (min-width: 979px) {*/
   #sidebar.affix-top {
-      position: static;
+      position: fixed;
+      width: 15%;
   }
   
-  #sidebar.affix {
+/*  #sidebar.affix {
       position: fixed;
       top: 0;
       width:21.2%;
   }
 }
-
-.affix,.affix-top {
-   position:static;
+*/
+.affix {
+   position:fixed;
+   top: 50px;
+   width: 15%;
 }
 
 /* theme */
@@ -35,6 +38,8 @@ body {
   color:#116611;
   background-image: url("http://images2.alphacoders.com/261/26102.jpg");
   background-attachment:fixed;
+  min-height: 768px;
+  padding-top: 70px;
 }
 
 a,a:hover {

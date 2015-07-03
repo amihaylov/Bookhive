@@ -8,7 +8,7 @@ var BooksApp = (function() {
     });
   };
 
-  //TODO Make selector for id
+  //
   var updateBook = function(book, id) {
     $.ajax({
       type: "PUT",
@@ -17,7 +17,7 @@ var BooksApp = (function() {
     });
   };
 
-  //TODO Make selector for id
+  //
   var deleteBook = function(book, id) {
     $.ajax({
       type: "DELETE",
@@ -29,16 +29,14 @@ var BooksApp = (function() {
   var displayList = function() {
 
     $.get( "/books", function( data ) {
-      //$( ".result" ).html( data );
       var container = $("#books-database > tbody");
       container.empty();
 
-      //Add the database
       for (var i=0; i<data.length; i+=1){
-        //Add classes TODO!
         var row = $("<tr></tr>");
         var cellTitle = $("<td></td>").text(data[i].title);
         var cellAuthor = $("<td></td>").text(data[i].author);
+        var cellGenre = $("<td></td>").text(data[i].genre);
         var cellImageSource = $("<td></td>").text(data[i].imgSrc);
         var cellReview = $("<td></td>").text(data[i].review);
         var cellPrice = $("<td></td>").text(data[i].price);
@@ -56,7 +54,7 @@ var BooksApp = (function() {
 
         cellActions.append(btnEdit).append(btnDelete);
 
-        row.append(cellTitle).append(cellAuthor).append(cellReview).append(cellPrice)
+        row.append(cellTitle).append(cellAuthor).append(cellGenre).append(cellReview).append(cellPrice)
             .append(cellDateOfPub).append(cellRating).append(cellNumOfSales)
             .append(cellPromotions).append(cellImageSource).append(cellActions);
         container.append(row);
@@ -70,11 +68,9 @@ var BooksApp = (function() {
     var container = $("#inner-content");
     container.empty();
 
-    //Add the database
     for (var i=0; i<data.length; i+=1){
-      //Add classes TODO!
       var row = $("<div></div>").addClass("row item");
-      var cellImage = $("<div></div>").addClass("col-md-3 items").prepend($('<img>',{class: 'img', src: data[i].imgSrc}));
+      var cellImage = $("<div></div>").addClass("col-md-3 items").prepend($('<img>',{class: 'img', src: data[i].imgSrc, alt: 'Error opening image!'}));
       var cellReview = $("<div></div>").addClass("col-md-3 items").text(data[i].review);
       var cellPrice = $("<div></div>").addClass("col-md-3 items");
       var shoppingCart = $("<i></i>").addClass("fa fa-shopping-cart").text(data[i].price);
@@ -209,6 +205,19 @@ var BooksApp = (function() {
     
   };
 
+  var searchByAuthorAndGenreAndDisplay = function(author, genre) {
+
+    $.get( "/books/" + author+'/'+genre, function( data ) {
+      if(typeof(data)!=='undefined'){
+        display(data);
+      }
+      else
+        alert("No such author and genre!");
+
+    },"json");
+    
+  };
+
   var searchByDateAndDisplay = function(date) {
 
     $.get( "/dates/" + date, function( data ) {
@@ -216,12 +225,68 @@ var BooksApp = (function() {
         display(data);
       }
       else
-        alert("No such book published on that date! Mind the YYYY-MM format!");
+        alert("No such book published on that date! Mind the YYYY-MMM format!");
 
     },"json");
     
   };
 
+  //Fill the sidebar dynamicaly, first check for genres, then which author belongs to where 
+  var fillSidebar = function(callBack){
+    $.get( "/books", function( data ) {
+      var container = $("#accordion2");
+      container.empty();
+
+      //Checking every book to extract genre and author and build container array
+      var genresAuthorsArray = [{'genre':'', 'authors':['']}]; 
+      for(var i=0; i<data.length; i++){
+        var found = false;
+        for(var j=0; j<genresAuthorsArray.length; j++){
+          if(genresAuthorsArray[j].genre.indexOf(data[i].genre) > -1) {
+            for(var k=0; k<genresAuthorsArray[j].authors.length; k++){
+              if(genresAuthorsArray[j].authors.indexOf(data[i].author) === -1)
+                genresAuthorsArray[j].authors.push(data[i].author);
+            }
+            found = true;
+          }
+        }
+        if(!found){
+          genresAuthorsArray.push({'genre': data[i].genre, 'authors':['']});
+          genresAuthorsArray[genresAuthorsArray.length-1].authors.push(data[i].author);
+        }
+      }
+      
+      //Build sidebar menu from array, skipping empty values
+      for(var i=1; i<genresAuthorsArray.length; i++){
+        var accGroup = $("<div></div>").addClass("accordion-group");
+        var accHeading = $("<div></div>").addClass("accordion-heading");
+        var accToggle = $("<a></a>").addClass("accordion-toggle")
+                        .text(genresAuthorsArray[i].genre)
+                        .prop({'href':'#collapse'+genresAuthorsArray[i].genre});
+        
+        //For some reason prop is not working with custom tags
+        accToggle.attr({'data-toggle':'collapse','data-parent':'#accordion2'});
+
+        accHeading.append(accToggle); accGroup.append(accHeading);
+
+        var accBody = $("<div></div>").addClass("accordion-body collapse")
+                .prop({'id':'collapse'+genresAuthorsArray[i].genre});
+        var accInner = $("<div></div>").addClass("accordion-inner")
+
+        for(var j=1; j<genresAuthorsArray[i].authors.length; j++){
+          var authorsParagr = $("<p></p>").addClass("author")
+                              .text(genresAuthorsArray[i].authors[j])
+                              .prop({'id':genresAuthorsArray[i].authors[j]});
+          authorsParagr.attr('genre',genresAuthorsArray[i].genre)
+          accInner.append(authorsParagr);
+        }
+        accBody.append(accInner);
+        accGroup.append(accBody);
+        container.append(accGroup);
+      }
+      callBack();
+    },"json");
+  };
 
   // public api
   return {
@@ -232,10 +297,12 @@ var BooksApp = (function() {
     displayImgReviewPrice: displayImgReviewPrice,
     searchByTitleAndDisplay: searchByTitleAndDisplay,
     searchByAuthorAndDisplay: searchByAuthorAndDisplay,
+    searchByAuthorAndGenreAndDisplay: searchByAuthorAndGenreAndDisplay,
     searchByDateAndDisplay: searchByDateAndDisplay,
     searchForPromoAndDisplay: searchForPromoAndDisplay,
     displayMostSelled: displayMostSelled,
-    displayTopRated: displayTopRated
+    displayTopRated: displayTopRated,
+    fillSidebar:fillSidebar
   };
 })();
  

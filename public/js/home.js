@@ -3,9 +3,11 @@
 $( document ).ready(function(){
    // init stuff here
 	BooksApp.displayImgReviewPrice();
-
-    $('.author').bind('click', function(){
-    	var name = $(this).attr('id');
-    	BooksApp.searchByAuthorAndDisplay(name);
-    });
+	BooksApp.fillSidebar(function(){
+	    $('.author').bind('click', function(){
+	    	var name = $(this).attr('id');
+	    	var genre = $(this).attr('genre');
+	    	BooksApp.searchByAuthorAndGenreAndDisplay(name,genre);
+	    });
+	});
 })

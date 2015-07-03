@@ -2,14 +2,20 @@
 // on document ready
 $( document ).ready(function(){
    // init stuff here
-   $("button#button-search").click(function() {
-		BooksApp.searchByTitleAndDisplay($("input#search-title").val());
+   	BooksApp.fillSidebar(function(){
+	    $('.author').bind('click', function(){
+	    	var name = $(this).attr('id');
+	    	var genre = $(this).attr('genre');
+	    	BooksApp.searchByAuthorAndGenreAndDisplay(name,genre);
+	    });
 	});
 
-    $('.author').bind('click', function(){
-    	var name = $(this).attr('id');
-    	BooksApp.searchByAuthorAndDisplay(name);
-    });
+   $("button#button-search").click(function() {
+   		if($('.radio-author').is(':checked')) 
+			BooksApp.searchByAuthorAndDisplay($("input#search-title").val());
+		else
+			BooksApp.searchByTitleAndDisplay($("input#search-title").val());
+	});
 })
 
 
