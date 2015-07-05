@@ -1,4 +1,12 @@
 var BooksApp = (function() {
+  
+  //Name must be unique!
+  var bookstores =[{name:'Booktrading, Sofia',city:'Sofia',info:'Sofia, Patriarh Evtimii str. 30; booktrading@book.com'
+  ,phone:'01234',workingTime:'Mon-Fri 08-19; Sat 10-17; Sun - closed',booksInStore:['It','1984'],latitude:30,longitude:30},
+  {name:'Booktrading, Plovdiv',city:'Plovdiv',info:'Plovdiv, bul. Bulgaria; booktrading@book.com'
+  ,phone:'012346',workingTime:'Mon-Fri 08-19; Sat 10-17; Sun - closed',booksInStore:['It'],latitude:42,longitude:23},
+  {name:'Penguins, Sofia',city:'Sofia',info:'Sofia, Vitoshka str. 30; penguins@book.com'
+  ,phone:'1111',workingTime:'Mon-Fri 08-19; Sat 10-17; Sun - closed',booksInStore:['1984'],latitude:10,longitude:10}];
 
   var addBook = function(book) {
     $.ajax({
@@ -288,6 +296,90 @@ var BooksApp = (function() {
     },"json");
   };
 
+  //Some Bookstore methods
+  var fillSidebarStores = function(callBack){
+    var container = $("#accordion2");
+    container.empty();
+
+    var cityStr="";
+    for (var i=0; i<bookstores.length; i++){
+      if(cityStr.indexOf(bookstores[i].city)===-1){
+        cityStr+=bookstores[i].city+" ";
+        var accGroup = $("<div></div>").addClass("accordion-group");
+        var accHeading = $("<div></div>").addClass("accordion-heading");
+        var accToggle = $("<a></a>").addClass("accordion-toggle bookstores")
+                        .text(bookstores[i].city)
+                        .prop({'href':'#collapse'+bookstores[i].city});
+        
+        //For some reason prop is not working with custom tags
+        accToggle.attr({'data-toggle':'collapse','data-parent':'#accordion2','city':bookstores[i].city});
+
+        accHeading.append(accToggle); accGroup.append(accHeading);
+        container.append(accGroup);
+      }
+    }
+    callBack();
+  };
+  //Google Map function
+
+  //Use only to display bookstores (check model)
+  var displayStore = function(data){
+    var container = $("#inner-content");
+    container.empty();
+
+    for (var i=0; i<data.length; i+=1){
+      var row1 = $("<div></div>").addClass("row item");
+      var cellMap = $("<div></div>").addClass("col-md-3 items map-canvas google-map"+i);
+          cellMap.attr({'id':data[i].name});
+
+      var cellName = $("<div></div>").addClass("col-md-3 items").text(data[i].name);
+      var cellInfo = $("<div></div>").addClass("col-md-3 items").text(data[i].info);
+      row1.append(cellMap).append(cellName).append(cellInfo);
+
+      var row2 = $("<div></div>").addClass("row item");
+      var cellPhone = $("<div></div>").addClass("col-md-3 items").text(data[i].phone);
+      var cellWorkTime = $("<div></div>").addClass("col-md-3 items").text(data[i].workingTime);
+
+      var booksStr = "";
+      for(var j=0; j<data[i].booksInStore.length; j++)
+        booksStr+=data[i].booksInStore[j] + ' ';
+      var cellBooksStore = $("<div></div>").addClass("col-md-3 items").text(booksStr);
+
+      row2.append(cellPhone).append(cellWorkTime).append(cellBooksStore);
+
+      container.append(row1).append(row2);
+    }
+  };
+
+  //You can try searching for key-value pair, instead of making hundreds of methods
+  //Also for the book methods
+  var searchStoreByBookAndDisplay = function(title){
+    var result = [];
+
+    for (var i=0; i<bookstores.length; i++){
+      var found = false;
+      for (var j=0; j<bookstores[i].booksInStore.length; j++)
+        if(title===bookstores[i].booksInStore[j]){
+          found = true; break;
+        }
+      if(found)
+        result.push(bookstores[i]);
+    }
+    displayStore(result);
+    return (result);
+  };
+
+  var searchStoreByCityAndDisplay = function(city){
+    var result = [];
+
+    for (var i=0; i<bookstores.length; i++){
+      if(city===bookstores[i].city)
+        result.push(bookstores[i]);
+    }
+    displayStore(result);
+    return (result);
+  };
+
   // public api
   return {
     addBook: addBook,
@@ -302,7 +394,11 @@ var BooksApp = (function() {
     searchForPromoAndDisplay: searchForPromoAndDisplay,
     displayMostSelled: displayMostSelled,
     displayTopRated: displayTopRated,
-    fillSidebar:fillSidebar
+    fillSidebar:fillSidebar,
+    fillSidebarStores:fillSidebarStores,
+    displayStore:displayStore,
+    searchStoreByBookAndDisplay:searchStoreByBookAndDisplay,
+    searchStoreByCityAndDisplay,searchStoreByCityAndDisplay
   };
 })();
  

@@ -147,4 +147,10 @@ h3.highlight  {
   margin:auto;
   text-align: center;
 }
+
+/*google map*/
+.map-canvas{
+  width:250px;
+  height:250px;
+}
 /* end theme */

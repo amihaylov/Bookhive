@@ -18,6 +18,7 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap-theme.min.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
     <link href="css/styles.css" rel="stylesheet">
+    <script src="http://maps.googleapis.com/maps/api/js"></script>
   </head>
   <body>
 <nav class="navbar navbar-static navbar-fixed-top">
@@ -71,12 +72,30 @@
       </div>
       <div class="col col-sm-6">
         <div class="pull-right">
-          <h1><a href="#" title="scroll down for your viewing pleasure">Coming Soon</a>       
+          <h1><a href="#" title="scroll down for your viewing pleasure">Bookstores</a>       
         </div>
       </div>
     </div>
   </div>
   </div>
+  </div>
+  
+  <div class="container">
+  <div class="row">
+      <div class="col col-sm-12">
+        
+        <div class="panel">
+        <div class="panel-body second-header">
+          Search bookstores by book: <button type="button" class="btn btn-default" id="button-search">
+          <span class="glyphicon glyphicon-search"></span> Search
+          </button><input type="text" id="search-title"><button type="button" class="btn btn-success" id="button-closest">
+          <span class="glyphicon glyphicon-globe"></span> Show closest
+          </button>
+        </div>
+        </div>
+        
+      </div>
+    </div>
   </div>
 </header>
 
@@ -86,34 +105,32 @@
         <div class="col col-sm-3">
           <div id="sidebar">
             <ul class="nav nav-stacked">
-                    <li><h3 class="highlight">Dates <i class="glyphicon glyphicon-calendar pull-right"></i></h3></li>
+                    <li><h3 class="highlight">Bookstores<i class="glyphicon glyphicon-book pull-right"></i></h3></li>
             </ul>
                 <div class="accordion" id="accordion2">
                     <div class="accordion-group">
                         <div class="accordion-heading">
                             <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseOne">
-                                2016
+                                Romance
                             </a>
                         </div>
                         <div id="collapseOne" class="accordion-body collapse">
-                            <div class="accordion-inner date">
-                              <!-- Make links dates - books, on click opens all the books that are due on that Year and Month -->
-                              <p id="2016-01">January</p>
+                            <div class="accordion-inner">
+                              <!-- Make links authors - books, on click opens all the author's books -->
+                              <p class="author" id="Erich Segal">Erich Segal</p>
                             </div>
                         </div>
                     </div>
                     <div class="accordion-group">
                             <div class="accordion-heading">
                                 <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseTwo">
-                                    2015
+                                    Sci Fi
                                 </a>
                             </div>
                             <div id="collapseTwo" class="accordion-body collapse">
-                                <div class="accordion-inner date">
-                                  <!-- Make links dates - books, on click opens all the books that are due on that Year and Month -->
-                                  <p id="2015-01">January</p>
-                                  <p id="2015-02">February</p>
-                                  <p id="2015-03">March</p>
+                                <div class="accordion-inner">
+                                  <!-- Make links authors - books, on click opens all the author's books -->
+                                  <p class="author" id="Isaac Asimov">Isaac Asimov</p>
                                 </div>
                             </div>
                         </div>
@@ -121,34 +138,9 @@
                </div>
           </div>  
           <div class="col-md-9">
-            <div class="panel">           
+            <div class="panel">
               <div class="panel-body" id="inner-content">
-                <!--Here be one item -->
-                 <div class="row item">           
-                   <div class="col-md-3 items">
-                      <img class="img" src="http://upload.wikimedia.org/wikipedia/en/thumb/d/d1/Love_Story_%28Erich_Segal_novel%29_cover.jpg/200px-Love_Story_%28Erich_Segal_novel%29_cover.jpg">
-                    </div>
-                    <div class="col-md-3 items">
-                        Here be reviews 
-                    </div>
-                    <div class="col-md-3 items">
-                        <i class="fa fa-shopping-cart">$20</i>
-                    </div>
-                </div>
-                <!--Ending of an item -->
-              <!--Here be one item -->
-               <div class="row item">           
-                 <div class="col-md-3 items">
-                    <img class="img" src="http://upload.wikimedia.org/wikipedia/en/thumb/a/a3/TheGodsThemselves%281stEd%29.jpg/200px-TheGodsThemselves%281stEd%29.jpg">
-                  </div>
-                  <div class="col-md-3 items">
-                      Here be reviews 
-                  </div>
-                  <div class="col-md-3 items">
-                      <i class="fa fa-shopping-cart">$30</i>
-                  </div>
-               </div>
-              <!--Ending of an item -->
+                
         </div>
        </div> 
     </div>
@@ -160,6 +152,6 @@
     <script src="js/scripts.js"></script>
     <script src="js/app.js"></script>
     <script src="js/init.js"></script>
-    <script src="js/coming-soon.js"></script>
+    <script src="js/bookstores.js"></script>
   </body>
 </html>
