@@ -152,7 +152,7 @@ app.get('/dates/:dateOfPub', function(req, res){
 	}
 	if (success === true)
 		return res.jsonp(result);
-	res.status(500).send('No such book published at the given date! Mind the YYYY-MM format!');
+	res.status(500).send('No such book published at the given date! Mind the MMM-YYYY format!');
 });
 
 // put an updated version of a book by title
