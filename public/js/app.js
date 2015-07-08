@@ -2,35 +2,60 @@ var BooksApp = (function() {
 
   //Title must be unique!
   var books = BooksData.getData();
-  console.log(books);
+  //console.log(books);
 
   //Name must be unique!
-  var bookstores =[{name:'Booktrading, Sofia',city:'Sofia',info:'Sofia, Patriarh Evtimii str. 30; booktrading@book.com'
-  ,phone:'01234',workingTime:'Mon-Fri 08-19; Sat 10-17; Sun - closed',booksInStore:['It','1984'],latitude:30,longitude:30},
-  {name:'Booktrading, Plovdiv',city:'Plovdiv',info:'Plovdiv, bul. Bulgaria; booktrading@book.com'
-  ,phone:'012346',workingTime:'Mon-Fri 08-19; Sat 10-17; Sun - closed',booksInStore:['It'],latitude:42,longitude:23},
-  {name:'Penguins, Sofia',city:'Sofia',info:'Sofia, Vitoshka str. 30; penguins@book.com'
-  ,phone:'1111',workingTime:'Mon-Fri 08-19; Sat 10-17; Sun - closed',booksInStore:['1984'],latitude:10,longitude:10}];
+  var bookstores =[{name:'Booktrading, Sofia',city:'Sofia',info:'Sofia, Graff Ignatiev str. 50; booktrading@book.com'
+  ,phone:'0882 907 212',workingTime:'Mon-Fri 08-19; Sat closed; Sun - closed',booksInStore:['It','1984'],latitude:42.689295,longitude:23.327590},
+  {name:'Booktrading, Varna',city:'Varna',info:'Varna, bul. Vladislav Varnenchik 258; booktrading@book.com'
+  ,phone:'0886 418 559',workingTime:'Mon-Fri 08-19; Sat 10-17; Sun - closed',booksInStore:['It'],latitude:43.2221833,longitude:27.8766342},
+  {name:'Penguins, Plovdiv',city:'Plovdiv',info:'Sofia, Vitoshka str. 30; penguins@book.com'
+  ,phone:'070017661',workingTime:'Mon-Fri 08-19; Sat 10-17; Sun - closed',booksInStore:['1984'],latitude:42.147232,longitude:24.751725}];
 
-  var display = function(data) {
+  var display = function(data, isComingSoon) {
     var container = $("#inner-content");
     container.empty();
 
     for (var i=0; i<data.length; i+=1){
-      var row = $("<div></div>").addClass("row item");
-      var cellImage = $("<div></div>").addClass("col-md-3 items").prepend($('<img>',{class: 'img', src: data[i].imgSrc, alt: 'Error opening image!'}));
-      var cellReview = $("<div></div>").addClass("col-md-3 items").text(data[i].review);
-      var cellPrice = $("<div></div>").addClass("col-md-3 items");
+      var mainRow = $("<div></div>").addClass("row item");
+      var row1 = $("<div></div>").addClass("row");
+      var row2 = $("<div></div>").addClass("row");
+
+      var cellImage = $("<div></div>").addClass("col-md-3 items").prepend($('<img>',{class: 'img', src: data[i].imgSrc, alt: data[i].title}));
+      var cellAuthor = $("<div></div>").addClass("col-md-3 items").text(data[i].author)
+                        .prepend($('<h4></h4>').text('Author:'));
+      var cellGenre = $("<div></div>").addClass("col-md-3 items").text(data[i].genre)
+                        .prepend($('<h4></h4>').text('Genre:'));
+      row1.append(cellImage).append(cellAuthor).append(cellGenre);
+     
+      if(!isComingSoon){
+        var cellRating = $("<div></div>").addClass("col-md-3 items").prepend($('<h4></h4>').text('Rating:'));
+        for (var j=0; j<data[i].rating; j++){
+          var star = $("<i></i>").addClass("fa fa-star fa-2");
+          cellRating.append(star);
+        }
+      }
+      else
+        var cellDate = $("<div></div>").addClass("col-md-3 items").prepend($('<h4></h4>').text('Date of Publishing:'))
+                        .append(data[i].dateOfPub);
+      var cellReview = $("<div></div>").addClass("col-md-3 items").text(data[i].review)
+                        .prepend($('<h4></h4>').text('Review:'));
+      var cellPrice = $("<div></div>").addClass("col-md-3 items").prepend($('<h4></h4>').text('Price:'));
       var shoppingCart = $("<i></i>").addClass("fa fa-shopping-cart").text(data[i].price);
       cellPrice.append(shoppingCart);
 
-      row.append(cellImage).append(cellReview).append(cellPrice);
-      container.append(row);
+      if(!isComingSoon)
+        row2.append(cellReview).append(cellRating).append(cellPrice);
+      else
+        row2.append(cellReview).append(cellDate).append(cellPrice);
+
+      mainRow.append(row1).append(row2);
+      container.append(mainRow);
     }
   };
 
   var displayImgReviewPrice = function() {
-      display(books);
+      display(books, false);
     
   };
 
@@ -129,7 +154,7 @@ var BooksApp = (function() {
     }
 
       if(typeof(result)!=='undefined'){
-        display(result);
+        display(result, false);
       }
       else
         alert("No such book!");
@@ -145,7 +170,7 @@ var BooksApp = (function() {
     }
 
       if(typeof(result)!=='undefined'){
-        display(result);
+        display(result, false);
       }
       else
         alert("No such author!");
@@ -161,7 +186,7 @@ var BooksApp = (function() {
     }
 
       if(typeof(result)!=='undefined'){
-        display(result);
+        display(result, false);
       }
       else
         alert("No such author and genre!");
@@ -178,7 +203,7 @@ var BooksApp = (function() {
     }
 
       if(typeof(result)!=='undefined'){
-        display(result);
+        display(result, true);
       }
       else
         alert("No such book published on that date! Mind the MMM-YYYY format!");
@@ -269,30 +294,38 @@ var BooksApp = (function() {
 
   //Use only to display bookstores (check model)
   var displayStore = function(data){
+
     var container = $("#inner-content");
     container.empty();
 
     for (var i=0; i<data.length; i+=1){
-      var row1 = $("<div></div>").addClass("row item");
+      var mainRow = $("<div></div>").addClass("row item");
+      var row1 = $("<div></div>").addClass("row");
       var cellMap = $("<div></div>").addClass("col-md-3 items map-canvas google-map"+i);
           cellMap.attr({'id':data[i].name});
 
-      var cellName = $("<div></div>").addClass("col-md-3 items").text(data[i].name);
-      var cellInfo = $("<div></div>").addClass("col-md-3 items").text(data[i].info);
+      var cellName = $("<div></div>").addClass("col-md-3 items").text(data[i].name)
+                      .prepend($('<h4></h4>').text('Bookstore:'));;
+      var cellInfo = $("<div></div>").addClass("col-md-3 items").text(data[i].info)
+                      .prepend($('<h4></h4>').text('Info:'));;
       row1.append(cellMap).append(cellName).append(cellInfo);
 
-      var row2 = $("<div></div>").addClass("row item");
-      var cellPhone = $("<div></div>").addClass("col-md-3 items").text(data[i].phone);
-      var cellWorkTime = $("<div></div>").addClass("col-md-3 items").text(data[i].workingTime);
+      var row2 = $("<div></div>").addClass("row");
+      var cellPhone = $("<div></div>").addClass("col-md-3 items").text(data[i].phone)
+                        .prepend($('<h4></h4>').text('Phone:'));;
+      var cellWorkTime = $("<div></div>").addClass("col-md-3 items").text(data[i].workingTime)
+                          .prepend($('<h4></h4>').text('Working Time:'));;
 
       var booksStr = "";
       for(var j=0; j<data[i].booksInStore.length; j++)
         booksStr+=data[i].booksInStore[j] + ' ';
-      var cellBooksStore = $("<div></div>").addClass("col-md-3 items").text(booksStr);
+      var cellBooksStore = $("<div></div>").addClass("col-md-3 items").text(booksStr)
+                            .prepend($('<h4></h4>').text('Books in store:'));;
 
       row2.append(cellPhone).append(cellWorkTime).append(cellBooksStore);
 
-      container.append(row1).append(row2);
+      mainRow.append(row1).append(row2);
+      container.append(mainRow);
     }
   };
 

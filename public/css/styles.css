@@ -49,7 +49,7 @@ header {
 
 body {
   color:#fff;
-  background-image: url("http://images2.alphacoders.com/261/26102.jpg");
+  background-image: url("../img/background.jpg");
   background-attachment:fixed;
   min-height: 768px;
   padding-top: 70px;
@@ -76,6 +76,10 @@ h3.highlight  {
   	border-bottom:2px solid #cfc;
 }
 
+h4 {
+  color: #cfc;
+}
+
 .navbar {
 	background-color:#003a00;
   	color:#ffffff;
@@ -86,14 +90,14 @@ h3.highlight  {
   	color:#fff;
   	padding-left:20px;
   	padding-right:20px;
-  	border-left:1px solid #33dd33;
+  	/*border-left:1px solid #33dd33;*/
 }
 .navbar-nav > li > a:hover, .navbar-nav > li > a:focus {
     color:#666666; 
 }
-.navbar-nav > li:last-child > a {
+/*.navbar-nav > li:last-child > a {
   	border-right:1px solid #33dd33;
-}
+}*/
 .navbar-nav > .active > a, .navbar-nav > .active > a:hover, .navbar-nav > .active > a:focus {
     color: #ffffff;
 	background-color:transparent;
@@ -148,6 +152,14 @@ h3.highlight  {
 .item {
   padding-top: 10px;
   padding-bottom: 10px;
+  margin-bottom: 10px;
+  border: 20px solid transparent;
+  padding: 15px;
+  border-image: url("../img/border.png") 30 round;
+}
+
+.items {
+  margin-bottom: 15px;
 }
 
 .img {
@@ -159,6 +171,10 @@ h3.highlight  {
 .second-header {
   margin:auto;
   text-align: center;
+}
+
+input {
+  color: grey;
 }
 
 /*google map*/
