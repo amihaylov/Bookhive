@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap-theme.min.css">
   </head>
   <body>
+
     <nav class="navbar navbar-static">
       <div class="container">
         <a class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
@@ -25,69 +26,58 @@
     <div class="container">
       <div class="tab-content">
         <div class="active tab-pane">
-          <h4>Books</h4>
+          <h4>Stores</h4>
           <div class="row">
             <div class="col-sm-4">
-              <form class="well" id="books-form">
+              <form class="well" id="stores-form">
                 <div class="form-group">
-                  <label>Title</label>
-                  <input class="form-control" id="book-title" type="text">
+                  <label>Name</label>
+                  <input class="form-control" id="store-name" type="text">
                 </div>
                 <div class="form-group">
-                  <label>Author</label>
-                  <input class="form-control" id="book-author" type="text">
+                  <label>City</label>
+                  <input class="form-control" id="store-city" type="text">
                 </div>
                 <div class="form-group">
-                  <label>Genre</label>
-                  <input class="form-control" id="book-genre" type="text">
+                  <label>Info</label>
+                  <input class="form-control" id="store-info" type="text">
                 </div>
                 <div class="form-group">
-                  <label>Review</label>
-                  <input class="form-control" id="book-review" type="text">
+                  <label>Phone</label>
+                  <input class="form-control" id="store-phone" type="text">
                 </div>
                 <div class="form-group">
-                  <label>Price</label>
-                  <input class="form-control" id="book-price" type="number">
+                  <label>Working Time</label>
+                  <input class="form-control" id="store-worktime" type="text">
                 </div>
                 <div class="form-group">
-                  <label>Date of Publishing</label>
-                  <input class="form-control" id="book-dateofpub" type="text" placeholder="Type only in DD-MMM-YYYY format!">
+                  <label>Books in Store</label>
+                  <input class="form-control" id="store-books" type="text" placeholder="Separate books with comma!">
                 </div>
                 <div class="form-group">
-                  <label>Book Rating</label>
-                  <input class="form-control" id="book-rating" type="number" min="1" max="5">
+                  <label>Latitude</label>
+                  <input class="form-control" id="store-latitude" type="number" min="-90" max="90">
                 </div>
                 <div class="form-group">
-                  <label>Number of Sales</label>
-                  <input class="form-control" id="book-numofsales" type="number">
-                </div>
-                <div class="form-group">
-                  <label>Book Promotions</label>
-                  <input class="form-control" id="book-promotions" type="text">
-                </div>
-                <div class="form-group">
-                  <label>Image Source</label>
-                  <input class="form-control" id="book-imgsrc" type="text">
+                  <label>Longitude</label>
+                  <input class="form-control" id="store-longitude" type="number" min="-180" max="180">
                 </div>
                 <button id="create-button" type="button" class="btn btn-primary">Save</button>
                 <button id="reset-button" type="button" class="btn btn-default">Reset</button>
               </form>
             </div>
             <div class="col-sm-8">
-              <table class="table" id="books-database">
+              <table class="table" id="stores-database">
                 <thead>
                   <tr>
-                    <th>Title</th>
-                    <th>Author</th>
-                    <th>Genre</th>
-                    <th>Review</th>
-                    <th>Price</th>
-                    <th>Date of publishing</th>
-                    <th>Rating</th>
-                    <th>Number of sales</th>
-                    <th>Promotions</th>
-                    <th>Image Source</th>
-                    <th>Actions</th>
+                    <th>Name</th>
+                    <th>City</th>
+                    <th>Info</th>
+                    <th>Phone</th>
+                    <th>Working Time</th>
+                    <th>Books in Store</th>
+                    <th>Latitude</th>
+                    <th>Longitude</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -103,6 +93,6 @@
   <!-- Latest compiled and minified JavaScript -->
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
   <script src="js/app.js"></script>
-	<script src="js/init.js"></script>
+	<script src="js/init_stores.js"></script>
   </body>
 </html>

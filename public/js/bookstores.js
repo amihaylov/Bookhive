@@ -15,6 +15,7 @@ $( document ).ready(function(){
     	userLocation.longitude = position.coords.longitude
     	var index = checkClosest(globalData, userLocation);
 		var resultArray = [];
+		console.log(globalData, index);
 		resultArray.push(globalData[index]);
 		BooksApp.displayStore(resultArray);
 		initialize(resultArray);
@@ -62,6 +63,9 @@ $( document ).ready(function(){
 
    // init google map
    var initialize = function(data){
+   	
+   	globalData=data;
+
 	for (var i=0; i<data.length; i++){
     	var myLatlng = new google.maps.LatLng(data[i].latitude,data[i].longitude);
     	var mapOptions = {
@@ -81,17 +85,13 @@ $( document ).ready(function(){
    BooksApp.fillSidebarStores(function(){
 	    $('.bookstores').bind('click', function(){
 	    	var city = $(this).attr('city');
-	    	var data = BooksApp.searchStoreByCityAndDisplay(city);
-	    	initialize(data);
-	    	globalData = data;
+	    	var data = BooksApp.searchStoreByCityAndDisplay(city, initialize);
 	    });
 	});
 
    
    $("button#button-search").click(function() {
-		var data = BooksApp.searchStoreByBookAndDisplay($("input#search-title").val());
-		initialize(data);		
-		globalData = data;
+		var data = BooksApp.searchStoreByBookAndDisplay($("input#search-title").val(), initialize);		
 	});
 	
 

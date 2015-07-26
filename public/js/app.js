@@ -1,16 +1,70 @@
 var BooksApp = (function() {
 
-  //Title must be unique!
-  var books = BooksData.getData();
-  //console.log(books);
+  var addBook = function(book) {
+    $.ajax({
+      type: "POST",
+      url: '/books',
+      data: book
+    });
+  };
 
-  //Name must be unique!
-  var bookstores =[{name:'Booktrading, Sofia',city:'Sofia',info:'Sofia, Graff Ignatiev str. 50; booktrading@book.com'
-  ,phone:'0882 907 212',workingTime:'Mon-Fri 08-19; Sat closed; Sun - closed',booksInStore:['It','1984'],latitude:42.689295,longitude:23.327590},
-  {name:'Booktrading, Varna',city:'Varna',info:'Varna, bul. Vladislav Varnenchik 258; booktrading@book.com'
-  ,phone:'0886 418 559',workingTime:'Mon-Fri 08-19; Sat 10-17; Sun - closed',booksInStore:['It'],latitude:43.2221833,longitude:27.8766342},
-  {name:'Penguins, Plovdiv',city:'Plovdiv',info:'Sofia, Vitoshka str. 30; penguins@book.com'
-  ,phone:'070017661',workingTime:'Mon-Fri 08-19; Sat 10-17; Sun - closed',booksInStore:['1984'],latitude:42.147232,longitude:24.751725}];
+  var updateBook = function(book, id) {
+    $.ajax({
+      type: "PUT",
+      url: '/books/' + id,
+      data: book
+    });
+  };
+
+  var deleteBook = function(book, id) {
+    $.ajax({
+      type: "DELETE",
+      url: '/books/' + id,
+      data: book
+    });
+  };
+
+  var displayList = function() {
+
+    $.get( "/books", function( data ) {
+      //$( ".result" ).html( data );
+      var container = $("#books-database > tbody");
+      container.empty();
+
+      //Add the database
+      for (var i=0; i<data.length; i+=1){
+        //Add classes TODO!
+        var row = $("<tr></tr>");
+        var cellTitle = $("<td></td>").text(data[i].title);
+        var cellAuthor = $("<td></td>").text(data[i].author);
+        var cellGenre = $("<td></td>").text(data[i].genre);
+        var cellImageSource = $("<td></td>").text(data[i].imgSrc);
+        var cellReview = $("<td></td>").text(data[i].review);
+        var cellPrice = $("<td></td>").text(data[i].price);
+        var cellDateOfPub = $("<td></td>").text(data[i].dateOfPub);
+        var cellRating = $("<td></td>").text(data[i].rating);
+        var cellNumOfSales = $("<td></td>").text(data[i].numOfSales);
+        var cellPromotions = $("<td></td>").text(data[i].promotions);
+        var cellActions = $("<td></td>");
+        var btnEdit = $("<button></button>").text('Edit')
+                .addClass("btn btn-primary edit-book")
+                .prop({"type": "button", "name": data[i].title});
+        var btnDelete = $("<button></button>").text('Del')
+                .addClass("btn btn-danger delete-book").css({"margin-left": "10px"})
+                .prop({"type": "button", "name": data[i].title});
+
+        cellActions.append(btnEdit).append(btnDelete);
+
+        row.append(cellTitle).append(cellAuthor).append(cellGenre).append(cellReview)
+          .append(cellPrice).append(cellDateOfPub).append(cellRating).append(cellNumOfSales)
+          .append(cellPromotions).append(cellImageSource).append(cellActions);
+        container.append(row);
+      }
+
+    },"json");
+    
+  };
+
 
   var display = function(data, isComingSoon) {
     var container = $("#inner-content");
@@ -55,38 +109,42 @@ var BooksApp = (function() {
   };
 
   var displayImgReviewPrice = function() {
-      display(books, false);
-    
+    $.get( "/books", function( data ) {
+      display(data, false);
+    },"json");
   };
 
   var searchForPromoAndDisplay = function(){
+    $.get( "/books", function( data ) {
       var container = $("#inner-content");
       container.empty();
 
       //Add the database
-      for (var i=0; i<books.length; i+=1){
+      for (var i=0; i<data.length; i+=1){
         //Add classes TODO!
-        if(typeof(books[i].promotions) !== 'undefined' || books[i].promotions.length()>0) {
+        if(typeof(data[i].promotions) !== 'undefined' || data[i].promotions.length()>0) {
           var row = $("<div></div>").addClass("row item");
-          var cellImage = $("<div></div>").addClass("col-md-3 items").prepend($('<img>',{class: 'img', src: books[i].imgSrc}));
-          var cellReview = $("<div></div>").addClass("col-md-3 items").text(books[i].review);
-          var cellPromo = $("<div></div>").addClass("col-md-3 items").text(books[i].promotions);
+          var cellImage = $("<div></div>").addClass("col-md-3 items").prepend($('<img>',{class: 'img', src: data[i].imgSrc}));
+          var cellReview = $("<div></div>").addClass("col-md-3 items").text(data[i].review);
+          var cellPromo = $("<div></div>").addClass("col-md-3 items").text(data[i].promotions);
           var cellPrice = $("<div></div>").addClass("col-md-3 items");
-          var shoppingCart = $("<i></i>").addClass("fa fa-shopping-cart").text(books[i].price);
+          var shoppingCart = $("<i></i>").addClass("fa fa-shopping-cart").text(data[i].price);
           cellPrice.append(shoppingCart);
 
           row.append(cellImage).append(cellReview).append(cellPromo).append(cellPrice);
           container.append(row);
         }
       }
+    },"json");
   };
 
   //Sorting the whole data descending and returning top 5 selled items
   var displayMostSelled = function(){
+    $.get( "/books", function( data ) {
       var container = $("#inner-content");
       container.empty();
       
-      books.sort(function(a, b){
+      data.sort(function(a, b){
         var keyA = a.numOfSales,
         keyB = b.numOfSales;
         // Compare the 2 number of sales
@@ -97,131 +155,123 @@ var BooksApp = (function() {
 
       //Add the database
       for (var i=0; i<5; i+=1){
-        //Add classes TODO!
+          if(!data)
+            break;
           var row = $("<div></div>").addClass("row item");
-          var cellImage = $("<div></div>").addClass("col-md-3 items").prepend($('<img>',{class: 'img', src: books[i].imgSrc}));
-          var cellReview = $("<div></div>").addClass("col-md-3 items").text(books[i].review);
-          var cellPromo = $("<div></div>").addClass("col-md-3 items").text(books[i].promotions);
+          var cellImage = $("<div></div>").addClass("col-md-3 items").prepend($('<img>',{class: 'img', src: data[i].imgSrc}));
+          var cellReview = $("<div></div>").addClass("col-md-3 items").text(data[i].review);
+          var cellPromo = $("<div></div>").addClass("col-md-3 items").text(data[i].promotions);
           var cellPrice = $("<div></div>").addClass("col-md-3 items");
-          var shoppingCart = $("<i></i>").addClass("fa fa-shopping-cart").text(books[i].price);
-          var cellNumOfSales = $("<i></i>").addClass("col-md-3 items").text(books[i].numOfSales);
+          var shoppingCart = $("<i></i>").addClass("fa fa-shopping-cart").text(data[i].price);
+          var cellNumOfSales = $("<i></i>").addClass("col-md-3 items").text(data[i].numOfSales);
           cellPrice.append(shoppingCart);
 
           row.append(cellImage).append(cellReview).append(cellPromo)
               .append(cellPrice).append(cellNumOfSales);
           container.append(row);
       }
+    },"json");
   };
 
   var displayTopRated = function(){
-    var container = $("#inner-content");
-    container.empty();
-    
-    books.sort(function(a, b){
-      var keyA = a.rating,
-      keyB = b.rating;
-      // Compare the 2 number of sales
-      if(keyA > keyB) return -1;
-      if(keyA < keyB) return 1;
-      return 0;
-    });
+    $.get( "/books", function( data ) {
+      var container = $("#inner-content");
+      container.empty();
+      
+      data.sort(function(a, b){
+        var keyA = a.rating,
+        keyB = b.rating;
+        // Compare the 2 number of sales
+        if(keyA > keyB) return -1;
+        if(keyA < keyB) return 1;
+        return 0;
+      });
 
-    //Add the database
-    for (var i=0; i<5; i+=1){
-      //Add classes TODO!
-        var row = $("<div></div>").addClass("row item");
-        var cellImage = $("<div></div>").addClass("col-md-3 items").prepend($('<img>',{class: 'img', src: books[i].imgSrc}));
-        var cellReview = $("<div></div>").addClass("col-md-3 items").text(books[i].review);
-        var cellPromo = $("<div></div>").addClass("col-md-3 items").text(books[i].promotions);
-        var cellPrice = $("<div></div>").addClass("col-md-3 items");
-        var shoppingCart = $("<i></i>").addClass("fa fa-shopping-cart").text(books[i].price);
-        var cellRating = $("<i></i>").addClass("col-md-3 items").text(books[i].rating);
-        cellPrice.append(shoppingCart);
+      //Add the database
+      for (var i=0; i<5; i+=1){
+          if(!data)
+            break;
+          var row = $("<div></div>").addClass("row item");
+          var cellImage = $("<div></div>").addClass("col-md-3 items").prepend($('<img>',{class: 'img', src: data[i].imgSrc}));
+          var cellReview = $("<div></div>").addClass("col-md-3 items").text(data[i].review);
+          var cellPromo = $("<div></div>").addClass("col-md-3 items").text(data[i].promotions);
+          var cellPrice = $("<div></div>").addClass("col-md-3 items");
+          var shoppingCart = $("<i></i>").addClass("fa fa-shopping-cart").text(data[i].price);
+          var cellRating = $("<i></i>").addClass("col-md-3 items").text(data[i].rating);
+          cellPrice.append(shoppingCart);
 
-        row.append(cellImage).append(cellReview).append(cellPromo)
-            .append(cellPrice).append(cellRating);
-        container.append(row);
-     }
+          row.append(cellImage).append(cellReview).append(cellPromo)
+              .append(cellPrice).append(cellRating);
+          container.append(row);
+       }
+    },"json");
   };
 
   var searchByTitleAndDisplay = function(title) {
 
-    var result = [];
-    for (var i=0; i<books.length; i+=1) {
-      if (books[i].title.indexOf(title) > -1) {
-        result.push(books[i]);
-      }
-    }
-
-      if(typeof(result)!=='undefined'){
-        display(result, false);
+    $.get( "/books/" + title, function( data ) {
+      if(typeof(data)!=='undefined'){
+        display(data);
       }
       else
         alert("No such book!");
+
+    },"json");
+
   };
 
   var searchByAuthorAndDisplay = function(author) {
 
-    var result = [];
-    for (var i=0; i<books.length; i+=1) {
-      if (books[i].author.indexOf(author) > -1) {
-        result.push(books[i]);
-      }
-    }
-
-      if(typeof(result)!=='undefined'){
-        display(result, false);
+    $.get( "/authors/" + author, function( data ) {
+      if(typeof(data)!=='undefined'){
+        display(data);
       }
       else
         alert("No such author!");
+
+    },"json");
+
   };
 
   var searchByAuthorAndGenreAndDisplay = function(author, genre) {
 
-    var result = [];
-    for (var i=0; i<books.length; i+=1) {
-      if (books[i].author.indexOf(author) > -1 && books[i].genre.indexOf(genre) > -1) {
-        result.push(books[i]);
-      }
-    }
-
-      if(typeof(result)!=='undefined'){
-        display(result, false);
+    $.get( "/books/" + author + '/' + genre, function( data ) {
+      if(typeof(data)!=='undefined'){
+        display(data);
       }
       else
-        alert("No such author and genre!");
+        alert("No such author or genre!");
+
+    },"json");
     
   };
 
   var searchByDateAndDisplay = function(date) {
 
-    var result = [];
-    for (var i=0; i<books.length; i+=1) {
-      if (books[i].dateOfPub.indexOf(date) > -1) {
-        result.push(books[i]);
-      }
-    }
-
-      if(typeof(result)!=='undefined'){
-        display(result, true);
+    $.get( "/dates/" + date, function( data ) {
+      if(typeof(data)!=='undefined'){
+        display(data);
       }
       else
         alert("No such book published on that date! Mind the MMM-YYYY format!");
+
+    },"json");
     
   };
 
   //Fill the sidebar dynamicaly, first check for genres, then which author belongs to where 
   var fillSidebar = function(callBack){
 
+    $.get( "/books", function( data ) {
       var container = $("#accordion2");
       container.empty();
 
       //Checking every book to extract genre and author and build container array
       var genresAuthorsArray = [{'genre':'', 'authors':['']}]; 
-      for(var i=0; i<books.length; i++){
+      for(var i=0; i<data.length; i++){
         var found = false;
         for(var j=0; j<genresAuthorsArray.length; j++){
-          if(genresAuthorsArray[j].genre.indexOf(books[i].genre) > -1) {
+          if(genresAuthorsArray[j].genre.indexOf(data[i].genre) > -1) {
             for(var k=0; k<genresAuthorsArray[j].authors.length; k++){
               if(genresAuthorsArray[j].authors.indexOf(books[i].author) === -1)
                 genresAuthorsArray[j].authors.push(books[i].author);
@@ -230,8 +280,8 @@ var BooksApp = (function() {
           }
         }
         if(!found){
-          genresAuthorsArray.push({'genre': books[i].genre, 'authors':['']});
-          genresAuthorsArray[genresAuthorsArray.length-1].authors.push(books[i].author);
+          genresAuthorsArray.push({'genre': data[i].genre, 'authors':['']});
+          genresAuthorsArray[genresAuthorsArray.length-1].authors.push(data[i].author);
         }
       }
       
@@ -264,37 +314,109 @@ var BooksApp = (function() {
         container.append(accGroup);
       }
       callBack();
+    },"json");
+
   };
 
   //Some Bookstore methods
-  var fillSidebarStores = function(callBack){
-    var container = $("#accordion2");
-    container.empty();
 
-    var cityStr="";
-    for (var i=0; i<bookstores.length; i++){
-      if(cityStr.indexOf(bookstores[i].city)===-1){
-        cityStr+=bookstores[i].city+" ";
-        var accGroup = $("<div></div>").addClass("accordion-group");
-        var accHeading = $("<div></div>").addClass("accordion-heading");
-        var accToggle = $("<a></a>").addClass("accordion-toggle bookstores")
-                        .text(bookstores[i].city)
-                        .prop({'href':'#collapse'+bookstores[i].city});
-        
-        //For some reason prop is not working with custom tags
-        accToggle.attr({'data-toggle':'collapse','data-parent':'#accordion2','city':bookstores[i].city});
-
-        accHeading.append(accToggle); accGroup.append(accHeading);
-        container.append(accGroup);
-      }
-    }
-    callBack();
+  var addStore = function(store) {
+    $.ajax({
+      type: "POST",
+      url: '/stores',
+      data: store
+    });
   };
-  //Google Map function
+
+  var updateStore = function(store, name) {
+    $.ajax({
+      type: "PUT",
+      url: '/stores/' + name,
+      data: store
+    });
+  };
+
+  var deleteStore = function(store, name) {
+    $.ajax({
+      type: "DELETE",
+      url: '/stores/' + name,
+      data: store
+    });
+  };
+
+  var fillSidebarStores = function(callBack){
+
+    $.get( "/stores", function( data ) {
+      var container = $("#accordion2");
+      container.empty();
+
+      var cityStr="";
+      for (var i=0; i<data.length; i++){
+        if(cityStr.indexOf(data[i].city)===-1){
+          cityStr+=data[i].city+" ";
+          var accGroup = $("<div></div>").addClass("accordion-group");
+          var accHeading = $("<div></div>").addClass("accordion-heading");
+          var accToggle = $("<a></a>").addClass("accordion-toggle bookstores")
+                          .text(data[i].city)
+                          .prop({'href':'#collapse'+data[i].city});
+          
+          //For some reason prop is not working with custom tags
+          accToggle.attr({'data-toggle':'collapse','data-parent':'#accordion2','city':data[i].city});
+
+          accHeading.append(accToggle); accGroup.append(accHeading);
+          container.append(accGroup);
+        }
+      }
+      callBack();
+    },"json");
+
+  };
 
   //Use only to display bookstores (check model)
-  var displayStore = function(data){
+  var displayStoreAdmin = function(){
+    $.get( "/stores", function( data ) {
+      var container = $("#stores-database > tbody");
+      container.empty();
 
+      for (var i=0; i<data.length; i+=1){
+        var row = $("<tr></tr>");
+
+        var cellName = $("<td></td>").text(data[i].name);
+        var cellCity = $("<td></td>").text(data[i].city);
+        var cellInfo = $("<td></td>").text(data[i].info);
+        var cellPhone = $("<td></td>").text(data[i].phone);
+        var cellWorkTime = $("<td></td>").text(data[i].workingTime)
+
+        var booksStr = "";
+        for(var j=0; j<data[i].booksInStore.length; j++)
+          booksStr+=data[i].booksInStore[j] + ' ';
+        var cellBooksStore = $("<td></td>").text(booksStr);
+
+        var cellLatitude = $("<td></td>").text(data[i].latitude);
+        var cellLongitude = $("<td></td>").text(data[i].longitude);
+
+        var cellActions = $("<td></td>");
+        var btnEdit = $("<button></button>").text('Edit')
+                .addClass("btn btn-primary edit-store")
+                .prop({"type": "button", "name": data[i].name});
+        var btnDelete = $("<button></button>").text('Del')
+                .addClass("btn btn-danger delete-store").css({"margin-left": "10px"})
+                .prop({"type": "button", "name": data[i].name});
+
+        cellActions.append(btnEdit).append(btnDelete);
+
+        row.append(cellName).append(cellCity).append(cellInfo).append(cellPhone)
+            .append(cellWorkTime).append(cellBooksStore).append(cellLatitude)
+            .append(cellLongitude).append(cellActions);
+
+        container.append(row);
+      }
+    },"json");
+
+  };
+
+  var displayStore = function(data){
+    
     var container = $("#inner-content");
     container.empty();
 
@@ -327,39 +449,43 @@ var BooksApp = (function() {
       mainRow.append(row1).append(row2);
       container.append(mainRow);
     }
+
   };
 
   //You can try searching for key-value pair, instead of making hundreds of methods
   //Also for the book methods
-  var searchStoreByBookAndDisplay = function(title){
-    var result = [];
-
-    for (var i=0; i<bookstores.length; i++){
-      var found = false;
-      for (var j=0; j<bookstores[i].booksInStore.length; j++)
-        if(title===bookstores[i].booksInStore[j]){
-          found = true; break;
+  //Some callback magic and value transfer as parameters
+  var searchStoreByBookAndDisplay = function(title, callBack){
+      $.get( "/stores/books/" + title, function( data ) {
+        if(typeof(data)!=='undefined'){
+          displayStore(data);
         }
-      if(found)
-        result.push(bookstores[i]);
-    }
-    displayStore(result);
-    return (result);
+        else
+          alert("No such book in any of the stores!");
+        callBack(data);
+        return (data);
+      },"json");
   };
 
-  var searchStoreByCityAndDisplay = function(city){
-    var result = [];
-
-    for (var i=0; i<bookstores.length; i++){
-      if(city===bookstores[i].city)
-        result.push(bookstores[i]);
-    }
-    displayStore(result);
-    return (result);
+  //Some callback magic (both setGlobalData and callBack are callback functions) as parameters
+  var searchStoreByCityAndDisplay = function(city, callBack){
+    $.get( "/stores/" + city, function( data ) {
+      if(typeof(data)!=='undefined'){
+        displayStore(data);
+      }
+      else
+        alert("No such store in the given city!");
+      callBack(data);
+      return (data);
+    },"json");
   };
 
   // public api
   return {
+    addBook: addBook,
+    updateBook: updateBook,
+    deleteBook: deleteBook,
+    displayList: displayList,
     displayImgReviewPrice: displayImgReviewPrice,
     searchByTitleAndDisplay: searchByTitleAndDisplay,
     searchByAuthorAndDisplay: searchByAuthorAndDisplay,
@@ -368,11 +494,16 @@ var BooksApp = (function() {
     searchForPromoAndDisplay: searchForPromoAndDisplay,
     displayMostSelled: displayMostSelled,
     displayTopRated: displayTopRated,
-    fillSidebar:fillSidebar,
-    fillSidebarStores:fillSidebarStores,
-    displayStore:displayStore,
-    searchStoreByBookAndDisplay:searchStoreByBookAndDisplay,
-    searchStoreByCityAndDisplay,searchStoreByCityAndDisplay
+
+    addStore: addStore,
+    updateStore: updateStore,
+    deleteStore: deleteStore,
+    fillSidebar: fillSidebar,
+    fillSidebarStores: fillSidebarStores,
+    displayStoreAdmin: displayStoreAdmin,
+    displayStore: displayStore,
+    searchStoreByBookAndDisplay: searchStoreByBookAndDisplay,
+    searchStoreByCityAndDisplay: searchStoreByCityAndDisplay
   };
 })();
  
