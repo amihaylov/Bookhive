@@ -89,6 +89,54 @@ app.get('/books/:title', function(req, res){
 	res.status(500).send('No such book title!');
 });
 
+// Get the books in given price range with POST
+app.post('/books/price', function(req, res){
+ // req.body contains the incoming fields and values
+ 	console.log(req.body);
+	var minPrice = req.body.minPrice;
+	var maxPrice = req.body.maxPrice;
+	var success = false;
+
+	var result = [];
+	for (var i=0; i<books.length; i+=1) {
+		if ((Number(books[i].price) >= Number(minPrice)) &&
+			(Number(books[i].price) <= Number(maxPrice))) {
+				result.push(books[i]);
+				success = true;
+		}
+	}
+
+	if (success === true)
+		res.jsonp({
+		msg: 'books found in price range!',
+		data: result
+		});
+	else
+		res.status(500).send('No such books in current price range!');
+});
+
+// get info about book by rating
+// for eg: /books/john-doe
+app.get('/books/rating/:rating', function(req, res){
+ // get the title from the params
+	/* If we dont use arrays
+	var title = req.params.title;
+	res.jsonp(books[title]);
+	*/
+	var success = false;
+	var result = [];
+	var rating = req.params.rating;
+	for (var i=0; i<books.length; i+=1) {
+		if (books[i].rating == rating) {
+			result.push(books[i]);
+			success = true;
+		}
+	}
+	if (success === true)
+		return res.jsonp(result);
+	res.status(500).send('No such books with this rating!');
+});
+
 //Lesson learned! '/authors/:author' DO matter!
 // '/authors/' create a different search namespace so to say
 // while ':author' searches for a field/key in the data and

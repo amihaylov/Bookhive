@@ -220,6 +220,32 @@ var BooksApp = (function() {
 
   };
 
+  var searchByRatingAndDisplay = function(rating) {
+
+    $.get( "/books/rating/" + rating, function( data ) {
+      if(typeof(data)!=='undefined'){
+        display(data);
+      }
+      else
+        alert("No such book with selected rating!");
+
+    },"json");
+
+  };
+
+  var searchByPriceRangeAndDisplay = function(range) {
+    console.log(range);
+    $.ajax({
+      type: "POST",
+      url: '/books/price',
+      data: range,
+      success: function (response) {
+        display(response.data);
+      }
+    });
+
+  };
+
   var searchByAuthorAndDisplay = function(author) {
 
     $.get( "/authors/" + author, function( data ) {
@@ -488,6 +514,8 @@ var BooksApp = (function() {
     displayList: displayList,
     displayImgReviewPrice: displayImgReviewPrice,
     searchByTitleAndDisplay: searchByTitleAndDisplay,
+    searchByRatingAndDisplay: searchByRatingAndDisplay,
+    searchByPriceRangeAndDisplay: searchByPriceRangeAndDisplay,
     searchByAuthorAndDisplay: searchByAuthorAndDisplay,
     searchByAuthorAndGenreAndDisplay: searchByAuthorAndGenreAndDisplay,
     searchByDateAndDisplay: searchByDateAndDisplay,
