@@ -92,6 +92,7 @@ var BooksApp = (function() {
       else
         var cellDate = $("<div></div>").addClass("col-md-3 items").prepend($('<h4></h4>').text('Date of Publishing:'))
                         .append(data[i].dateOfPub);
+
       var cellReview = $("<div></div>").addClass("col-md-3 items").text(data[i].review)
                         .prepend($('<h4></h4>').text('Review:'));
       var cellPrice = $("<div></div>").addClass("col-md-3 items").prepend($('<h4></h4>').text('Price:'));
@@ -122,7 +123,7 @@ var BooksApp = (function() {
       //Add the database
       for (var i=0; i<data.length; i+=1){
         //Add classes TODO!
-        if(typeof(data[i].promotions) !== 'undefined' || data[i].promotions.length()>0) {
+        if(data[i].promotions) {
           var row = $("<div></div>").addClass("row item");
           var cellImage = $("<div></div>").addClass("col-md-3 items").prepend($('<img>',{class: 'img', src: data[i].imgSrc}));
           var cellReview = $("<div></div>").addClass("col-md-3 items").text(data[i].review);
@@ -158,15 +159,17 @@ var BooksApp = (function() {
           if(!data)
             break;
           var row = $("<div></div>").addClass("row item");
-          var cellImage = $("<div></div>").addClass("col-md-3 items").prepend($('<img>',{class: 'img', src: data[i].imgSrc}));
-          var cellReview = $("<div></div>").addClass("col-md-3 items").text(data[i].review);
-          var cellPromo = $("<div></div>").addClass("col-md-3 items").text(data[i].promotions);
-          var cellPrice = $("<div></div>").addClass("col-md-3 items");
+          var cellImage = $("<div></div>").addClass("col-md-3 items").prepend($('<img>',{class: 'img', src: data[i].imgSrc, alt: data[i].title}));
+          var cellPromo = $("<div></div>").addClass("col-md-3 items").text(data[i].promotions)
+                            .prepend($('<h4></h4>').text('Promotions:'));
+          var cellPrice = $("<div></div>").addClass("col-md-3 items")
+                            .prepend($('<h4></h4>').text('Price:'));
           var shoppingCart = $("<i></i>").addClass("fa fa-shopping-cart").text(data[i].price);
-          var cellNumOfSales = $("<i></i>").addClass("col-md-3 items").text(data[i].numOfSales);
+          var cellNumOfSales = $("<i></i>").addClass("col-md-3 items").text(data[i].numOfSales)
+                                .prepend($('<h4></h4>').text('Number of Sales:'));
           cellPrice.append(shoppingCart);
 
-          row.append(cellImage).append(cellReview).append(cellPromo)
+          row.append(cellImage).append(cellPromo)
               .append(cellPrice).append(cellNumOfSales);
           container.append(row);
       }
@@ -192,15 +195,22 @@ var BooksApp = (function() {
           if(!data)
             break;
           var row = $("<div></div>").addClass("row item");
-          var cellImage = $("<div></div>").addClass("col-md-3 items").prepend($('<img>',{class: 'img', src: data[i].imgSrc}));
-          var cellReview = $("<div></div>").addClass("col-md-3 items").text(data[i].review);
-          var cellPromo = $("<div></div>").addClass("col-md-3 items").text(data[i].promotions);
-          var cellPrice = $("<div></div>").addClass("col-md-3 items");
+          var cellImage = $("<div></div>").addClass("col-md-3 items").prepend($('<img>',{class: 'img', src: data[i].imgSrc, alt: data[i].title}));
+          var cellPromo = $("<div></div>").addClass("col-md-3 items").text(data[i].promotions)
+                            .prepend($('<h4></h4>').text('Promotions:'));
+          var cellPrice = $("<div></div>").addClass("col-md-3 items")
+                            .prepend($('<h4></h4>').text('Price:'));
           var shoppingCart = $("<i></i>").addClass("fa fa-shopping-cart").text(data[i].price);
-          var cellRating = $("<i></i>").addClass("col-md-3 items").text(data[i].rating);
+
+          var cellRating = $("<i></i>").addClass("col-md-3 items").prepend($('<h4></h4>').text('Rating:'));
+          for (var j=0; j<data[i].rating; j++){
+            var star = $("<i></i>").addClass("fa fa-star fa-2");
+            cellRating.append(star);
+          }
+
           cellPrice.append(shoppingCart);
 
-          row.append(cellImage).append(cellReview).append(cellPromo)
+          row.append(cellImage).append(cellPromo)
               .append(cellPrice).append(cellRating);
           container.append(row);
        }
@@ -276,7 +286,7 @@ var BooksApp = (function() {
 
     $.get( "/dates/" + date, function( data ) {
       if(typeof(data)!=='undefined'){
-        display(data);
+        display(data, true);
       }
       else
         alert("No such book published on that date! Mind the MMM-YYYY format!");
@@ -299,8 +309,8 @@ var BooksApp = (function() {
         for(var j=0; j<genresAuthorsArray.length; j++){
           if(genresAuthorsArray[j].genre.indexOf(data[i].genre) > -1) {
             for(var k=0; k<genresAuthorsArray[j].authors.length; k++){
-              if(genresAuthorsArray[j].authors.indexOf(books[i].author) === -1)
-                genresAuthorsArray[j].authors.push(books[i].author);
+              if(genresAuthorsArray[j].authors.indexOf(data[i].author) === -1)
+                genresAuthorsArray[j].authors.push(data[i].author);
             }
             found = true;
           }
@@ -413,11 +423,14 @@ var BooksApp = (function() {
         var cellPhone = $("<td></td>").text(data[i].phone);
         var cellWorkTime = $("<td></td>").text(data[i].workingTime)
 
+        /* If booksInStore is array
         var booksStr = "";
         for(var j=0; j<data[i].booksInStore.length; j++)
           booksStr+=data[i].booksInStore[j] + ' ';
         var cellBooksStore = $("<td></td>").text(booksStr);
+        */
 
+        var cellBooksStore = $("<td></td>").text(data[i].booksInStore.replace(/;/g,"; "));
         var cellLatitude = $("<td></td>").text(data[i].latitude);
         var cellLongitude = $("<td></td>").text(data[i].longitude);
 
@@ -463,11 +476,16 @@ var BooksApp = (function() {
                         .prepend($('<h4></h4>').text('Phone:'));;
       var cellWorkTime = $("<div></div>").addClass("col-md-3 items").text(data[i].workingTime)
                           .prepend($('<h4></h4>').text('Working Time:'));;
-
+      
+      /* If booksInStore is array
       var booksStr = "";
       for(var j=0; j<data[i].booksInStore.length; j++)
         booksStr+=data[i].booksInStore[j] + ' ';
       var cellBooksStore = $("<div></div>").addClass("col-md-3 items").text(booksStr)
+                            .prepend($('<h4></h4>').text('Books in store:'));;
+      */
+
+      var cellBooksStore = $("<div></div>").addClass("col-md-3 items").text(data[i].booksInStore.replace(/;/g,"; "))
                             .prepend($('<h4></h4>').text('Books in store:'));;
 
       row2.append(cellPhone).append(cellWorkTime).append(cellBooksStore);

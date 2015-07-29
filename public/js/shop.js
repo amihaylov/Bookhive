@@ -31,7 +31,6 @@ $( document ).ready(function(){
 
     $("#star-slider").raty({
 	  click: function(score, evt) {
-	    alert('ID: ' + this.id + "\nscore: " + score + "\nevent: " + evt);
 	    BooksApp.searchByRatingAndDisplay(score);
 	  }
 	});

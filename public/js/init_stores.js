@@ -20,11 +20,11 @@ $( document ).ready(function(){
    // bind add task to BooksApp.addBook
    $("button#create-button").click(function(){
    	var store = {name: $("input#store-name").val(),
-   				   city: $("nput#store-city").val(),
+   				   city: $("input#store-city").val(),
              info: $("input#store-info").val(),
    				   phone: $("input#store-phone").val(),
              workingTime: $("input#store-worktime").val(),
-             booksInStore: $("input#store-books").val().split(","),
+             booksInStore: $("input#store-books").val().split(";"),
              latitude: $("input#store-latitude").val(),
              longitude: $("input#store-longitude").val()};
 
@@ -37,11 +37,11 @@ $( document ).ready(function(){
       var name = $(this).prop('name');
       
       var store = {name: $("input#store-name").val(),
-             city: $("nput#store-city").val(),
+             city: $("input#store-city").val(),
              info: $("input#store-info").val(),
              phone: $("input#store-phone").val(),
              workingTime: $("input#store-worktime").val(),
-             booksInStore: $("input#store-books").val().split(","),
+             booksInStore: $("input#store-books").val().split(";"),
              latitude: $("input#store-latitude").val(),
              longitude: $("input#store-longitude").val()};    
 
